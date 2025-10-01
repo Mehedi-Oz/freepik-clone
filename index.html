@@ -271,7 +271,9 @@
               <li>3D Models</li>
               <li>Fonts</li>
             </ul>
+
             <ul class="flex gap-4 text-white">
+              <!-- Filters (chevron UP by default) -->
               <li class="flex items-center px-3 py-2 gap-2 text-sm text-white transition">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="h-4 w-4">
@@ -281,34 +283,42 @@
 
                 Filters
 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                  stroke-width="1.5" stroke="currentColor" class="chevron h-4 w-4 cursor-pointer">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                  <!-- down by default -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="chevron h-4 w-4 cursor-pointer">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
                 </svg>
-
-
               </li>
-              <li class="flex items-center px-3 py-2 gap-2 text-sm text-white transition">
-                Relevance
 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                  stroke-width="1.5" stroke="currentColor" class="chevron h-4 w-4 cursor-pointer">
+              <li class="relative flex items-center px-3 py-2 gap-2 text-sm text-white transition">
+                Relevance
+                <svg id="relevance-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                  stroke-width="1.5" stroke="currentColor" class="h-4 w-4 cursor-pointer">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                  <!-- down by default -->
                 </svg>
 
+                <!-- Popup inside the same <li> -->
+                <div id="relevance-popup"
+                  class="absolute top-[60px] right-0 bg-gray-900 border border-gray-700 rounded shadow-lg z-50 text-white font-normal p-4 hidden w-40">
+                  <label class="flex items-center mb-2">
+                    Relevance
+                    <input type="radio" name="sort" value="relevance" class="accent-green-500 ml-auto">
+                  </label>
+                  <label class="flex items-center">
+                    Recent
+                    <input type="radio" name="sort" value="recent" class="accent-green-500 ml-auto">
+                  </label>
+                </div>
               </li>
             </ul>
           </div>
         </nav>
 
         <hr class="border-t border-gray-500">
-
-        <div class="flex gap-4 text-white text-sm font-bold text-xs mt-3">
+        
+        <div id="filters-section" class="flex gap-4 text-white text-sm font-bold text-xs mt-3">
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -318,19 +328,14 @@
             license
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -341,19 +346,14 @@
             AI-generated
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -364,19 +364,14 @@
             Orientataion
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -387,19 +382,14 @@
             Color
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -410,19 +400,14 @@
             people
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -433,19 +418,14 @@
             File type
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -456,19 +436,14 @@
             Editable online
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
           <button
-            class="flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
+            class="filter-toggle flex items-center bg-gray-700 px-3 py-2 gap-2 rounded-lg text-sm text-white hover:bg-gray-600 transition">
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-4">
@@ -480,18 +455,14 @@
             Advanced
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
+              stroke="currentColor" class="filter-chevron h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             </svg>
 
           </button>
 
         </div>
+
       </div>
 
     </header>
@@ -562,7 +533,7 @@
       <div class="next-page flex items-center justify-between mt-10 px-6">
         <div class="flex-1 flex justify-center">
           <button class="flex items-center bg-white text-gray-800 px-4 py-2 rounded gap-2 hover:bg-gray-100 transition">
-            Next Page
+            Next Pafilter-toggle ge
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="h-4 w-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
