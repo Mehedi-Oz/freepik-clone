@@ -1,3 +1,114 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Sidebar transition improvements */
+#logo-sidebar {
+  transition: width 0.3s ease-in-out;
+}
+
+.ml-64, .ml-16 {
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* Prevent white space flicker */
+.sidebar-text {
+  transition: opacity 0.2s ease-in-out;
+}
+
+#sidebar-logo-img {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebar-signin {
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* filter popups when parent has overflow-x-auto */
+#filters-section {
+  position: relative;
+}
+
+/* Desktop popups */
+#filters-section [id$="-popup"] {
+  position: fixed !important;
+  z-index: 9999 !important;
+  display: none !important;
+}
+
+#filters-section [id$="-popup"]:not(.hidden) {
+  display: block !important;
+}
+
+/* Ensure proper positioning for nested popups too */
+#people-popup [id$="-popup"] {
+  position: absolute !important;
+}
+
+/* Mobile filter popup styling - override desktop rules */
+#mobile-filters-dropdown [id$="-popup"] {
+  position: relative !important;
+  width: 100% !important;
+  left: auto !important;
+  right: auto !important;
+  display: none !important;
+}
+
+#mobile-filters-dropdown [id$="-popup"]:not(.hidden) {
+  display: block !important;
+}
+
+/* Ensure mobile filter popups match their parent button width */
+.mobile-filter-popup {
+  width: 100%;
+  box-sizing: border-box;
+  position: relative !important;
+}
+
+/* Hide default browser clear button */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Hide Firefox clear button */
+input[type="search"] {
+  -moz-appearance: textfield;
+}
+
+/* PC Navigation Bottom Border Effect */
+.nav-item {
+  position: relative;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  border-bottom-color: white;
+}
+
+.nav-item.active {
+  border-bottom-color: white;
+}
+
+/* More button styling */
+#more-btn {
+  position: relative;
+  padding-bottom: 8px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+#more-btn:hover {
+  border-bottom-color: white;
+}
+
+#more-btn.active {
+  border-bottom-color: white;
+}
