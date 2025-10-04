@@ -24,16 +24,21 @@
   transition: opacity 0.2s ease-in-out;
 }
 
-/* filter popups when parent has overflow-x-auto */
+/* FIXED: Filter section positioning for proper popup placement */
 #filters-section {
   position: relative;
+  overflow: visible !important; /* Allow popups to extend beyond container */
 }
 
-/* Desktop popups */
+/* FIXED: Desktop popups - positioned relative to filters section */
 #filters-section [id$="-popup"] {
-  position: fixed !important;
-  z-index: 9999 !important;
+  position: absolute !important; /* Changed from fixed to absolute */
+  z-index: 1000 !important; /* Lower than header but above content */
   display: none !important;
+  background-color: #111827 !important; /* Ensure solid background */
+  border: 1px solid #374151 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
 #filters-section [id$="-popup"]:not(.hidden) {
@@ -43,6 +48,7 @@
 /* Ensure proper positioning for nested popups too */
 #people-popup [id$="-popup"] {
   position: absolute !important;
+  z-index: 1001 !important; /* Slightly higher than main popups */
 }
 
 /* Mobile filter popup styling - override desktop rules */
@@ -111,4 +117,61 @@ input[type="search"] {
 
 #more-btn.active {
   border-bottom-color: white;
+}
+
+/* STICKY HEADER COMPLETE FIX */
+.main-wrapper {
+  position: relative;
+  z-index: 1;
+  overflow-x: visible !important;
+}
+
+.content-container {
+  overflow-x: hidden;
+}
+
+/* Sticky header with proper z-index hierarchy */
+.sticky-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important; /* Header has highest z-index */
+  background-color: #1f2937 !important;
+  backdrop-filter: blur(8px) !important;
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* Ensure sidebar has lower z-index */
+#logo-sidebar {
+  z-index: 40 !important;
+}
+
+/* Mobile sidebar overlay should be between sidebar and header */
+#mobile-sidebar-overlay {
+  z-index: 80 !important;
+}
+
+/* Mobile dropdowns should be above header but below modals */
+#mobile-all-images-dropdown,
+#mobile-filters-dropdown,
+#mobile-settings-dropdown {
+  z-index: 110 !important;
+}
+
+/* Ensure proper margins work with sticky header */
+@media (min-width: 640px) {
+  .main-wrapper {
+    margin-left: 16rem;
+  }
+  
+  .main-wrapper.collapsed {
+    margin-left: 4rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .main-wrapper {
+    margin-left: 0 !important;
+  }
 }

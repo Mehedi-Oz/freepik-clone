@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   const sidebar = document.getElementById('logo-sidebar');
   const collapseBtn = document.getElementById('sidebar-collapse-btn');
-  const mainContent = document.querySelector('.ml-64');
+  const mainContent = document.querySelector('.main-wrapper'); // Updated selector
   const sidebarLogo = document.querySelector('.sidebar-logo');
   const sidebarDivider = document.querySelector('.sidebar-divider');
   const headerLogo = document.querySelector('header img');
@@ -13,20 +13,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const screenWidth = window.innerWidth;
 
     if (screenWidth < 1280) {
-      // Hide collapse button on smaller screens
       if (collapseBtn) {
         collapseBtn.style.display = 'none';
       }
 
       if (!isCollapsed) {
-        // Auto-collapse when screen goes below 1280px
         isCollapsed = true;
         sidebar.classList.remove('w-64');
         sidebar.classList.add('w-16');
         mainContent.classList.remove('ml-64');
         mainContent.classList.add('ml-16');
 
-        // Show header logo when sidebar is collapsed
         if (headerLogo) {
           headerLogo.classList.remove('hidden');
         }
@@ -62,20 +59,17 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.sidebar-helper-icons .flex > div').children[1].classList.add('hidden');
       }
     } else if (screenWidth >= 1280) {
-      // Show collapse button on larger screens
       if (collapseBtn) {
         collapseBtn.style.display = 'block';
       }
 
       if (isCollapsed) {
-        // Auto-expand when screen goes back to 1280px or above
         isCollapsed = false;
         sidebar.classList.remove('w-16');
         sidebar.classList.add('w-64');
         mainContent.classList.remove('ml-16');
         mainContent.classList.add('ml-64');
 
-        // Hide header logo when sidebar is expanded
         if (headerLogo) {
           headerLogo.classList.add('hidden');
         }
@@ -115,167 +109,122 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Listen for window resize
   window.addEventListener('resize', handleResize);
-
-  // Check initial screen size on load
   handleResize();
 
   collapseBtn?.addEventListener('click', function () {
     isCollapsed = !isCollapsed;
 
     if (isCollapsed) {
-      // Show header logo when sidebar is collapsed
       if (headerLogo) {
         headerLogo.classList.remove('hidden');
       }
 
-      // Collapse sidebar
       sidebar.classList.remove('w-64');
       sidebar.classList.add('w-16');
-
-      // Adjust main content margin
       mainContent.classList.remove('ml-64');
       mainContent.classList.add('ml-16');
 
-      // Center the collapse button
       sidebarLogo.classList.remove('justify-between');
       sidebarLogo.classList.add('justify-center');
 
-      // Hide text elements
       document.querySelectorAll('.sidebar-text').forEach(text => {
         text.classList.add('hidden');
       });
 
-      // Hide logo
       document.getElementById('sidebar-logo-img').classList.add('hidden');
-
-      // Adjust divider for collapsed state
       sidebarDivider.classList.remove('mx');
       sidebarDivider.classList.add('mx-2');
-
-      // Hide sign-in section
       document.querySelector('.sidebar-signin').classList.add('hidden');
 
-      // Remove padding from menu items and center icons
       document.querySelectorAll('.sidebar-menu a').forEach(link => {
         link.classList.remove('p-2');
         link.classList.add('p-1', 'justify-center');
       });
 
-      // Add margin to SVG icons in menu
       document.querySelectorAll('.sidebar-menu svg').forEach(svg => {
         svg.classList.add('m-1');
       });
 
-      // Adjust helper icons layout
       const helperIcons = document.querySelector('.sidebar-helper-icons .flex');
       helperIcons.classList.remove('justify-between');
       helperIcons.classList.add('flex-col', 'gap-2', 'items-center');
 
-      // Hide email icon (keep only question, theme, and dots)
       const emailIcon = helperIcons.children[0].children[1];
       emailIcon.classList.add('hidden');
 
-      // Remove padding from helper icons and make them larger
       document.querySelectorAll('.sidebar-helper-icons .p-2').forEach(icon => {
         icon.classList.remove('p-2');
         icon.classList.add('p-2');
       });
 
-      // Rotate collapse button icon
       const collapseIcon = collapseBtn.querySelector('svg');
       collapseIcon.classList.add('-rotate-90');
 
-      // Adjust helper icons for collapsed state
       document.querySelector('.sidebar-helper-icons .flex').classList.remove('justify-between');
       document.querySelector('.sidebar-helper-icons .flex').classList.add('justify-center');
       document.querySelector('.sidebar-helper-icons .flex > div').classList.remove('flex', 'gap-4');
       document.querySelector('.sidebar-helper-icons .flex > div').classList.add('flex-col', 'gap-2');
-
-      // Hide message box icon
       document.querySelector('.sidebar-helper-icons .flex > div').children[1].classList.add('hidden');
 
     } else {
-      // Hide header logo when sidebar is expanded
       if (headerLogo) {
         headerLogo.classList.add('hidden');
       }
 
-      // Expand sidebar
       sidebar.classList.remove('w-16');
       sidebar.classList.add('w-64');
-
-      // Adjust main content margin
       mainContent.classList.remove('ml-16');
       mainContent.classList.add('ml-64');
 
-      // Restore collapse button alignment
       sidebarLogo.classList.add('justify-between');
       sidebarLogo.classList.remove('justify-center');
 
-      // Delay showing elements to prevent white flash
       setTimeout(() => {
-        // Show text elements
         document.querySelectorAll('.sidebar-text').forEach(text => {
           text.classList.remove('hidden');
         });
 
-        // Show logo
         document.getElementById('sidebar-logo-img').classList.remove('hidden');
-
-        // Show sign-in section
         document.querySelector('.sidebar-signin').classList.remove('hidden');
       }, 150);
 
-      // Restore divider immediately
       sidebarDivider.classList.add('mx');
       sidebarDivider.classList.remove('mx-2');
 
-      // Restore padding to menu items
       document.querySelectorAll('.sidebar-menu a').forEach(link => {
         link.classList.add('p-2');
         link.classList.remove('p-1', 'justify-center');
       });
 
-      // Remove margin from SVG icons in menu
       document.querySelectorAll('.sidebar-menu svg').forEach(svg => {
         svg.classList.remove('m-1');
       });
 
-      // Restore helper icons layout
       const helperIcons = document.querySelector('.sidebar-helper-icons .flex');
       helperIcons.classList.add('justify-between');
       helperIcons.classList.remove('flex-col', 'gap-2', 'items-center');
 
-      // Show email icon
       const emailIcon = helperIcons.children[0].children[1];
       emailIcon.classList.remove('hidden');
 
-      // Rotate collapse button icon back
       const collapseIcon = collapseBtn.querySelector('svg');
       collapseIcon.classList.remove('-rotate-90');
 
-      // Restore helper icons for expanded state
       document.querySelector('.sidebar-helper-icons .flex').classList.add('justify-between');
       document.querySelector('.sidebar-helper-icons .flex').classList.remove('justify-center');
       document.querySelector('.sidebar-helper-icons .flex > div').classList.add('flex', 'gap-4');
       document.querySelector('.sidebar-helper-icons .flex > div').classList.remove('flex-col', 'gap-2');
-
-      // Show message box icon
       document.querySelector('.sidebar-helper-icons .flex > div').children[1].classList.remove('hidden');
     }
   });
 });
-
-
 
 // ========== Search Bar Clear Button Functionality ==========
 document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.querySelector('input[type="search"]');
   const clearIcon = document.querySelector('.absolute.right-20');
   if (searchInput && clearIcon) {
-    // Function to toggle clear button visibility
     function toggleClearButton() {
       if (searchInput.value.trim() !== '') {
         clearIcon.classList.remove('hidden');
@@ -284,50 +233,36 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // Show/hide clear button on input
     searchInput.addEventListener('input', toggleClearButton);
 
-    // Clear the input when clear button is clicked
     clearIcon.addEventListener('click', function () {
       searchInput.value = '';
       clearIcon.classList.add('hidden');
       searchInput.focus();
     });
 
-    // Initial check on page load
     toggleClearButton();
   }
 });
-
 
 // ========== PC Navigation Active State ==========
 document.addEventListener('DOMContentLoaded', function () {
   const navItems = document.querySelectorAll('.nav-item');
   const moreBtn = document.getElementById('more-btn');
 
-  // Handle nav item clicks
   navItems.forEach(item => {
     item.addEventListener('click', function () {
-      // Remove active class from all nav items
       navItems.forEach(nav => nav.classList.remove('active'));
       if (moreBtn) moreBtn.classList.remove('active');
-
-      // Add active class to clicked item
       this.classList.add('active');
-
       console.log('Selected:', this.textContent.trim());
     });
   });
 
-  // Handle more button click
   if (moreBtn) {
     moreBtn.addEventListener('click', function () {
-      // Remove active class from all nav items
       navItems.forEach(nav => nav.classList.remove('active'));
-
-      // Add active class to more button
       this.classList.add('active');
-
       console.log('Selected: More');
     });
   }
@@ -337,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function () {
     defaultItem.classList.add('active');
   }
 });
-
 
 // ========== Responsive Navbar with More Button ==========
 document.addEventListener('DOMContentLoaded', function () {
@@ -350,14 +284,12 @@ document.addEventListener('DOMContentLoaded', function () {
   let allItems = [];
   let isMoreOpen = false;
 
-  // Initialize navbar items
   function initNavbar() {
     const items = navbarMenu.querySelectorAll('.nav-item:not(#more-btn)');
     allItems = Array.from(items);
     console.log('Found navigation items:', allItems.length);
   }
 
-  // Calculate available space considering both right section AND filters section
   function checkNavbarFit() {
     if (allItems.length === 0) {
       console.log('No navigation items found');
@@ -376,7 +308,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const itemGap = 16;
     const moreButtonWidth = 80;
 
-    // Calculate how many items can fit
     for (let i = 0; i < allItems.length; i++) {
       const itemWidth = allItems[i].offsetWidth + itemGap;
       const willNeedMoreButton = (i < allItems.length - 1);
@@ -392,7 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log(`Visible items: ${visibleCount}, Total items: ${allItems.length}`);
 
-    // Apply visibility changes
     allItems.forEach((item, index) => {
       if (index < visibleCount) {
         item.classList.remove('hidden');
@@ -401,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    // Show/hide More button and update dropdown
     if (visibleCount < allItems.length) {
       moreBtn.classList.remove('hidden');
       updateMoreDropdown(visibleCount);
@@ -414,18 +343,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Update More dropdown with hidden items
   function updateMoreDropdown(visibleCount) {
     hiddenItems.innerHTML = '';
-    hiddenItems.style.display = 'none'; // Start hidden
+    hiddenItems.style.display = 'none';
 
-    // Add hidden navigation items to dropdown
     for (let i = visibleCount; i < allItems.length; i++) {
       const li = document.createElement('li');
       li.className = 'block px-4 py-2 text-white cursor-pointer hover:bg-gray-700 whitespace-nowrap';
       li.textContent = allItems[i].textContent.trim();
 
-      // Add click handler for dropdown items
       li.addEventListener('click', function (e) {
         e.stopPropagation();
         console.log('Clicked hidden item:', this.textContent);
@@ -440,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(`Added ${allItems.length - visibleCount} items to dropdown`);
   }
 
-  // Toggle More dropdown
   moreBtn.addEventListener('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -461,7 +386,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Close dropdown when clicking outside
   document.addEventListener('click', function (e) {
     if (isMoreOpen && !moreBtn.contains(e.target) && !hiddenItems.contains(e.target)) {
       hiddenItems.classList.add('hidden');
@@ -471,13 +395,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Initialize with delay and check both on load and when filters change
   setTimeout(() => {
     initNavbar();
     checkNavbarFit();
   }, 300);
 
-  // Debounced resize handler
   let resizeTimeout;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimeout);
@@ -486,7 +408,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 150);
   });
 
-  // Watch for changes in filters section
   if (filtersSection) {
     const observer = new MutationObserver(function () {
       clearTimeout(resizeTimeout);
@@ -502,9 +423,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-
 // ========== close theme popup ========== 
-
 document.addEventListener('click', function (e) {
   const details = document.querySelectorAll('details');
   details.forEach(detail => {
@@ -514,9 +433,7 @@ document.addEventListener('click', function (e) {
   });
 });
 
-
 // ========== filter toggle ========== 
-
 const chevron = document.querySelector('.chevron');
 const target = document.getElementById('filters-section');
 let isDown = false;
@@ -531,9 +448,7 @@ chevron?.addEventListener('click', () => {
   }
 });
 
-
 // ========== relevance toggle ========== 
-
 const relevanceChevron = document.getElementById('relevance-chevron');
 const relevancePopup = document.getElementById('relevance-popup');
 
@@ -541,9 +456,7 @@ relevanceChevron?.addEventListener('click', () => {
   relevancePopup.classList.toggle('hidden');
 });
 
-
-// ========== filter popups toggle ========== 
-
+// ========== FIXED filter popups toggle ========== 
 document.addEventListener('DOMContentLoaded', () => {
   // Get all filter elements
   const filterElements = [
@@ -563,15 +476,34 @@ document.addEventListener('DOMContentLoaded', () => {
     { btn: 'ethnicity-btn', popup: 'ethnicity-popup', chevron: 'ethnicity-chevron' }
   ];
 
-  // Function to position popup correctly
+  // FIXED: Function to position popup correctly using absolute positioning
   function positionPopup(button, popup) {
+    // Get the filters section container
+    const filtersSection = document.getElementById('filters-section');
+    const sectionRect = filtersSection.getBoundingClientRect();
     const buttonRect = button.getBoundingClientRect();
-    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-    // Position popup below the button
-    popup.style.left = (buttonRect.left + scrollLeft) + 'px';
-    popup.style.top = (buttonRect.bottom + scrollTop + 8) + 'px'; // 8px gap
+    
+    // Calculate position relative to filters section
+    const leftOffset = buttonRect.left - sectionRect.left;
+    const topOffset = buttonRect.bottom - sectionRect.top + 8; // 8px gap
+    
+    // Set absolute position relative to filters section
+    popup.style.position = 'absolute';
+    popup.style.left = leftOffset + 'px';
+    popup.style.top = topOffset + 'px';
+    popup.style.zIndex = '1000'; // Higher than other elements
+    
+    // Ensure popup stays within screen bounds
+    const popupRect = popup.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    
+    if (popupRect.right > viewportWidth) {
+      // Adjust position if popup goes off-screen
+      const adjustment = viewportWidth - popupRect.right - 10; // 10px margin
+      popup.style.left = (leftOffset + adjustment) + 'px';
+    }
+    
+    console.log(`Positioned ${popup.id} at left: ${leftOffset}px, top: ${topOffset}px`);
   }
 
   // Function to close all popups
@@ -589,7 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
 
   // Add event listeners for main filter buttons
   filterElements.forEach(element => {
@@ -683,8 +614,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Reposition popups on scroll or resize
-  window.addEventListener('scroll', () => {
+  // FIXED: Reposition popups on scroll or resize
+  function repositionAllPopups() {
     filterElements.forEach(element => {
       const btn = document.getElementById(element.btn);
       const popup = document.getElementById(element.popup);
@@ -693,18 +624,10 @@ document.addEventListener('DOMContentLoaded', () => {
         positionPopup(btn, popup);
       }
     });
-  });
+  }
 
-  window.addEventListener('resize', () => {
-    filterElements.forEach(element => {
-      const btn = document.getElementById(element.btn);
-      const popup = document.getElementById(element.popup);
-
-      if (btn && popup && !popup.classList.contains('hidden')) {
-        positionPopup(btn, popup);
-      }
-    });
-  });
+  window.addEventListener('scroll', repositionAllPopups);
+  window.addEventListener('resize', repositionAllPopups);
 
   // Initialize all popups as hidden
   [...filterElements, ...nestedElements].forEach(element => {
@@ -716,25 +639,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ========== People Count Button Selection ==========
 document.querySelectorAll('.people-count-btn').forEach(btn => {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.people-count-btn').forEach(b => b.classList.remove('bg-green-600'));
     this.classList.add('bg-green-600');
   });
 });
+
 document.querySelectorAll('.author-mode-btn').forEach(btn => {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.author-mode-btn').forEach(b => b.classList.remove('bg-green-600'));
     this.classList.add('bg-green-600');
   });
 });
+
 document.querySelectorAll('.result-variety-btn').forEach(btn => {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.result-variety-btn').forEach(b => b.classList.remove('bg-green-600'));
     this.classList.add('bg-green-600');
   });
 });
-
 
 // ========== Mobile Sidebar Overlay Functionality ==========
 document.addEventListener('DOMContentLoaded', function () {
@@ -743,7 +668,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const mobileSidebar = document.getElementById('mobile-sidebar');
   const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
-  // Open mobile sidebar
   mobileMenuBtn?.addEventListener('click', function () {
     mobileSidebarOverlay.classList.remove('hidden');
     setTimeout(() => {
@@ -751,7 +675,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 10);
   });
 
-  // Close mobile sidebar
   mobileSidebarClose?.addEventListener('click', function () {
     mobileSidebar.classList.add('-translate-x-full');
     setTimeout(() => {
@@ -759,7 +682,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 300);
   });
 
-  // Close sidebar when clicking on overlay
   mobileSidebarOverlay?.addEventListener('click', function (e) {
     if (e.target === mobileSidebarOverlay) {
       mobileSidebar.classList.add('-translate-x-full');
@@ -769,7 +691,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
-
 
 // ========== Mobile 3-Button Navigation ==========
 document.addEventListener('DOMContentLoaded', function () {
@@ -781,7 +702,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const mobileFiltersDropdown = document.getElementById('mobile-filters-dropdown');
   const mobileSettingsDropdown = document.getElementById('mobile-settings-dropdown');
 
-  // Function to close all mobile dropdowns
   function closeAllMobileDropdowns() {
     if (mobileAllImagesDropdown) {
       mobileAllImagesDropdown.style.display = 'none';
@@ -797,17 +717,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // All Images Button Click
   mobileAllImagesBtn?.addEventListener('click', function (e) {
     e.stopPropagation();
-
-    // Check if currently visible
     const isVisible = mobileAllImagesDropdown.style.display === 'block';
-
-    // Close all dropdowns first
     closeAllMobileDropdowns();
-
-    // Toggle current dropdown
     if (!isVisible) {
       mobileAllImagesDropdown.style.display = 'block';
       mobileAllImagesDropdown.classList.remove('hidden');
@@ -815,17 +728,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Filters Button Click
   mobileFiltersBtn?.addEventListener('click', function (e) {
     e.stopPropagation();
-
-    // Check if currently visible
     const isVisible = mobileFiltersDropdown.style.display === 'block';
-
-    // Close all dropdowns first
     closeAllMobileDropdowns();
-
-    // Toggle current dropdown
     if (!isVisible) {
       mobileFiltersDropdown.style.display = 'block';
       mobileFiltersDropdown.classList.remove('hidden');
@@ -833,17 +739,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Settings Button Click
   mobileSettingsBtn?.addEventListener('click', function (e) {
     e.stopPropagation();
-
-    // Check if currently visible
     const isVisible = mobileSettingsDropdown.style.display === 'block';
-
-    // Close all dropdowns first
     closeAllMobileDropdowns();
-
-    // Toggle current dropdown
     if (!isVisible) {
       mobileSettingsDropdown.style.display = 'block';
       mobileSettingsDropdown.classList.remove('hidden');
@@ -851,7 +750,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Close dropdowns when clicking outside
   document.addEventListener('click', function (e) {
     const isInsideMobileNav = e.target.closest('#mobile-nav-buttons') ||
       e.target.closest('#mobile-all-images-dropdown') ||
@@ -863,30 +761,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Handle radio button selection and close dropdown
   const radioButtons = document.querySelectorAll('input[name="mobile-navigation"]');
   radioButtons.forEach(radio => {
     radio.addEventListener('change', function () {
       if (this.checked) {
-        // Update button text to show selected option
         const selectedText = this.parentElement.querySelector('span').textContent;
         mobileAllImagesBtn.textContent = selectedText;
-
-        // Close dropdown after selection
         setTimeout(() => {
           closeAllMobileDropdowns();
         }, 200);
-
         console.log('Selected:', selectedText);
       }
     });
   });
 });
 
-
 // ========== Mobile Filter Toggles ==========
 document.addEventListener('DOMContentLoaded', function () {
-  // Mobile filter elements
   const mobileFilterElements = [
     { btn: 'mobile-license-btn', popup: 'mobile-license-popup' },
     { btn: 'mobile-ai-btn', popup: 'mobile-ai-popup' },
@@ -897,7 +788,6 @@ document.addEventListener('DOMContentLoaded', function () {
     { btn: 'mobile-sort-btn', popup: 'mobile-sort-popup' }
   ];
 
-  // Function to close all mobile filter popups
   function closeAllMobileFilterPopups() {
     mobileFilterElements.forEach(element => {
       const popup = document.getElementById(element.popup);
@@ -913,7 +803,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Add event listeners for mobile filter buttons
   mobileFilterElements.forEach(element => {
     const btn = document.getElementById(element.btn);
     const popup = document.getElementById(element.popup);
@@ -921,14 +810,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btn && popup) {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-
-        // Check if currently open
         const isHidden = popup.classList.contains('hidden');
-
-        // Close all other popups first
         closeAllMobileFilterPopups();
 
-        // Toggle current popup
         if (isHidden) {
           popup.classList.remove('hidden');
           popup.style.display = 'block';
@@ -944,14 +828,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
 
-      // Prevent popup from closing when clicking inside it
       popup.addEventListener('click', (e) => {
         e.stopPropagation();
       });
     }
   });
 
-  // Close mobile filter popups when clicking outside
   document.addEventListener('click', (e) => {
     const isInsideMobileFilters = e.target.closest('#mobile-filters-dropdown');
     const isMobileFilterButton = e.target.closest('[id^="mobile-"][id$="-btn"]');
@@ -962,10 +844,30 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// ========== Mobile People Filter Selection ==========
+document.addEventListener('DOMContentLoaded', function () {
+  const mobileNoPeopleBtn = document.querySelector('.mobile-no-people-btn');
+  const mobilePeopleCountBtns = document.querySelectorAll('.mobile-people-count-btn');
+
+  mobileNoPeopleBtn?.addEventListener('click', function () {
+    mobilePeopleCountBtns.forEach(btn => btn.classList.remove('bg-green-600'));
+    mobileNoPeopleBtn.classList.remove('bg-green-600');
+    this.classList.add('bg-green-600');
+    console.log('Selected: No people');
+  });
+
+  mobilePeopleCountBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      mobilePeopleCountBtns.forEach(b => b.classList.remove('bg-green-600'));
+      mobileNoPeopleBtn.classList.remove('bg-green-600');
+      this.classList.add('bg-green-600');
+      console.log('Selected:', this.textContent, 'people');
+    });
+  });
+});
 
 // ========== Footer Mobile Collapsible Sections ==========
 document.addEventListener('DOMContentLoaded', function () {
-  // Products Section Toggle
   const productsToggle = document.getElementById('products-toggle');
   const productsList = document.getElementById('products-list');
   const productsArrow = document.getElementById('products-arrow');
@@ -975,7 +877,6 @@ document.addEventListener('DOMContentLoaded', function () {
     productsArrow.classList.toggle('rotate-180');
   });
 
-  // Get Started Section Toggle
   const getStartedToggle = document.getElementById('get-started-toggle');
   const getStartedList = document.getElementById('get-started-list');
   const getStartedArrow = document.getElementById('get-started-arrow');
@@ -985,7 +886,6 @@ document.addEventListener('DOMContentLoaded', function () {
     getStartedArrow.classList.toggle('rotate-180');
   });
 
-  // Company Section Toggle
   const companyToggle = document.getElementById('company-toggle');
   const companyList = document.getElementById('company-list');
   const companyArrow = document.getElementById('company-arrow');
