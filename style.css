@@ -1,57 +1,88 @@
+/**
+ * @file style-test.css
+ * @description This file contains custom CSS styles for the Freepik clone project.
+ * It complements the Tailwind CSS framework by providing styles for specific
+ * component behaviors, transitions, and workarounds.
+ */
+
+/* ============================================================================= */
+/* I. UTILITIES
+/* ============================================================================= */
+
+/**
+ * Utility to hide the scrollbar for elements that are scrollable.
+ * This is used for a cleaner look on custom scroll containers.
+ */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* Sidebar transition improvements */
+/* ============================================================================= */
+/* II. SIDEBAR STYLES
+/* ============================================================================= */
+
+/**
+ * Defines smooth transitions for the sidebar's width and the main content's
+ * margin when the sidebar collapses or expands.
+ */
 #logo-sidebar {
   transition: width 0.3s ease-in-out;
 }
 
-.ml-64, .ml-16 {
+.ml-64,
+.ml-16 {
   transition: margin-left 0.3s ease-in-out;
 }
 
-/* Prevent white space flicker */
-.sidebar-text {
-  transition: opacity 0.2s ease-in-out;
-}
-
-#sidebar-logo-img {
-  transition: opacity 0.2s ease-in-out;
-}
-
+/**
+ * Prevents a "white flash" or jarring effect on text and images inside the
+ * sidebar during collapse/expand animations by syncing their opacity transition.
+ */
+.sidebar-text,
+#sidebar-logo-img,
 .sidebar-signin {
   transition: opacity 0.2s ease-in-out;
 }
 
-/* FIXED: Filter section positioning for proper popup placement */
+/* ============================================================================= */
+/* III. POPUP AND DROPDOWN STYLES
+/* ============================================================================= */
+
+/**
+ * WORKAROUND for positioning fixed popups within a scrolling container.
+ * The parent needs a `position: relative` for the popups to be anchored correctly.
+ */
 #filters-section {
   position: relative;
-  overflow: visible !important; /* Allow popups to extend beyond container */
 }
 
-/* FIXED: Desktop popups - positioned relative to filters section */
+/**
+ * Desktop filter popups are positioned `fixed` to stay in place relative to the
+ * viewport, which is necessary when they are triggered from within a sticky header.
+ * The `!important` flag is used to override any conflicting inline styles.
+ */
 #filters-section [id$="-popup"] {
-  position: absolute !important; /* Changed from fixed to absolute */
-  z-index: 1000 !important; /* Lower than header but above content */
+  position: fixed !important;
+  z-index: 9999 !important;
   display: none !important;
-  background-color: #111827 !important; /* Ensure solid background */
-  border: 1px solid #374151 !important;
-  border-radius: 6px !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
 #filters-section [id$="-popup"]:not(.hidden) {
   display: block !important;
 }
 
-/* Ensure proper positioning for nested popups too */
+/**
+ * Nested popups (like gender/age within the people filter) must be positioned
+ * `absolute` relative to their parent popup.
+ */
 #people-popup [id$="-popup"] {
   position: absolute !important;
-  z-index: 1001 !important; /* Slightly higher than main popups */
 }
 
-/* Mobile filter popup styling - override desktop rules */
+/**
+ * On mobile, filter popups should behave like normal block elements within their
+ * container, not fixed to the viewport. These rules override the desktop styles.
+ */
 #mobile-filters-dropdown [id$="-popup"] {
   position: relative !important;
   width: 100% !important;
@@ -64,30 +95,38 @@
   display: block !important;
 }
 
-/* Ensure mobile filter popups match their parent button width */
 .mobile-filter-popup {
   width: 100%;
   box-sizing: border-box;
   position: relative !important;
 }
 
-/* Hide default browser clear button */
-input[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  appearance: none;
-}
+/* ============================================================================= */
+/* IV. FORM & INPUT STYLES
+/* ============================================================================= */
 
+/**
+ * Hides the default clear ('x') button that appears in search inputs
+ * on WebKit and Firefox browsers for a consistent custom design.
+ */
+input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
   appearance: none;
 }
 
-/* Hide Firefox clear button */
 input[type="search"] {
   -moz-appearance: textfield;
 }
 
-/* PC Navigation Bottom Border Effect */
+/* ============================================================================= */
+/* V. DESKTOP NAVIGATION
+/* ============================================================================= */
+
+/**
+ * Creates a bottom border effect for the active/hovered navigation item
+ * on the main desktop navigation bar.
+ */
 .nav-item {
   position: relative;
   padding-bottom: 5px;
@@ -95,15 +134,12 @@ input[type="search"] {
   transition: all 0.3s ease;
 }
 
-.nav-item:hover {
-  border-bottom-color: white;
-}
-
+.nav-item:hover,
 .nav-item.active {
   border-bottom-color: white;
 }
 
-/* More button styling */
+/* Similar styling for the "More" button to ensure consistency. */
 #more-btn {
   position: relative;
   padding-bottom: 8px;
@@ -111,67 +147,29 @@ input[type="search"] {
   transition: all 0.3s ease;
 }
 
-#more-btn:hover {
-  border-bottom-color: white;
-}
-
+#more-btn:hover,
 #more-btn.active {
   border-bottom-color: white;
 }
 
-/* STICKY HEADER COMPLETE FIX */
-.main-wrapper {
-  position: relative;
-  z-index: 1;
-  overflow-x: visible !important;
+/* ============================================================================= */
+/* VI. MOBILE-SPECIFIC STYLES
+/* ============================================================================= */
+
+/**
+ * Prevents the main body from scrolling when a modal or full-screen
+ * dropdown is active on mobile.
+ */
+body.no-scroll {
+  overflow: hidden;
 }
 
-.content-container {
-  overflow-x: hidden;
-}
-
-/* Sticky header with proper z-index hierarchy */
-.sticky-header {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 100 !important; /* Header has highest z-index */
-  background-color: #1f2937 !important;
-  backdrop-filter: blur(8px) !important;
-  width: 100% !important;
-  left: 0 !important;
-  right: 0 !important;
-}
-
-/* Ensure sidebar has lower z-index */
-#logo-sidebar {
-  z-index: 40 !important;
-}
-
-/* Mobile sidebar overlay should be between sidebar and header */
-#mobile-sidebar-overlay {
-  z-index: 80 !important;
-}
-
-/* Mobile dropdowns should be above header but below modals */
-#mobile-all-images-dropdown,
-#mobile-filters-dropdown,
-#mobile-settings-dropdown {
-  z-index: 110 !important;
-}
-
-/* Ensure proper margins work with sticky header */
-@media (min-width: 640px) {
-  .main-wrapper {
-    margin-left: 16rem;
-  }
-  
-  .main-wrapper.collapsed {
-    margin-left: 4rem;
-  }
-}
-
-@media (max-width: 639px) {
-  .main-wrapper {
-    margin-left: 0 !important;
-  }
+/**
+ * Allows mobile dropdowns (like Filters and Settings) to be scrollable
+ * on their own if their content exceeds the viewport height.
+ * `calc(100vh - 200px)` provides space for the header and other UI elements.
+ */
+.mobile-dropdown-scroll {
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }

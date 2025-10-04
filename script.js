@@ -1,24 +1,48 @@
-// ========== Sidebar Collapse Functionality ==========
+/**
+ * @file script-test.js
+ * @description This file contains all the client-side JavaScript functionality
+ * for the Freepik clone project. It handles responsive behaviors,
+ * interactive UI elements like sidebars, navigation, and popups,
+ * and other dynamic features.
+ */
+
+// =============================================================================
+// I. SIDEBAR COLLAPSE FUNCTIONALITY
+// =============================================================================
+/**
+ * Manages the collapsing and expanding of the main sidebar.
+ * - It includes a manual toggle button for desktop view.
+ * - It automatically collapses the sidebar on smaller screens (less than 1280px)
+ *   and expands it on larger screens.
+ */
 document.addEventListener('DOMContentLoaded', function () {
+  // DOM element references
   const sidebar = document.getElementById('logo-sidebar');
   const collapseBtn = document.getElementById('sidebar-collapse-btn');
-  const mainContent = document.querySelector('.main-wrapper'); // Updated selector
+  const mainContent = document.querySelector('.ml-64');
   const sidebarLogo = document.querySelector('.sidebar-logo');
   const sidebarDivider = document.querySelector('.sidebar-divider');
   const headerLogo = document.querySelector('header img');
 
+  // State management for sidebar
   let isCollapsed = false;
 
+  /**
+   * Handles the responsive behavior of the sidebar based on window width.
+   * Collapses the sidebar automatically on screens smaller than 1280px.
+   */
   function handleResize() {
     const screenWidth = window.innerWidth;
 
     if (screenWidth < 1280) {
+      // On smaller screens, the collapse is automatic, so the button is hidden.
       if (collapseBtn) {
         collapseBtn.style.display = 'none';
       }
 
       if (!isCollapsed) {
         isCollapsed = true;
+        // Apply styles for a collapsed sidebar
         sidebar.classList.remove('w-64');
         sidebar.classList.add('w-16');
         mainContent.classList.remove('ml-64');
@@ -28,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
           headerLogo.classList.remove('hidden');
         }
 
-        // Apply all collapse styles
+        // Adjust various elements to fit the collapsed state
         sidebarLogo.classList.remove('justify-between');
         sidebarLogo.classList.add('justify-center');
         document.querySelectorAll('.sidebar-text').forEach(text => {
@@ -59,12 +83,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.sidebar-helper-icons .flex > div').children[1].classList.add('hidden');
       }
     } else if (screenWidth >= 1280) {
+      // On larger screens, the collapse button is available.
       if (collapseBtn) {
         collapseBtn.style.display = 'block';
       }
 
       if (isCollapsed) {
         isCollapsed = false;
+        // Restore styles for an expanded sidebar
         sidebar.classList.remove('w-16');
         sidebar.classList.add('w-64');
         mainContent.classList.remove('ml-16');
@@ -74,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
           headerLogo.classList.add('hidden');
         }
 
-        // Apply all expand styles
+        // Restore element styles for the expanded state
         sidebarLogo.classList.add('justify-between');
         sidebarLogo.classList.remove('justify-center');
         setTimeout(() => {
@@ -83,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
           document.getElementById('sidebar-logo-img').classList.remove('hidden');
           document.querySelector('.sidebar-signin').classList.remove('hidden');
-        }, 150);
+        }, 150); // Delay to sync with CSS transition
         sidebarDivider.classList.add('mx');
         sidebarDivider.classList.remove('mx-2');
         document.querySelectorAll('.sidebar-menu a').forEach(link => {
@@ -109,58 +135,50 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Set initial state on page load
   window.addEventListener('resize', handleResize);
   handleResize();
 
+  // Event listener for the manual collapse button
   collapseBtn?.addEventListener('click', function () {
     isCollapsed = !isCollapsed;
 
     if (isCollapsed) {
+      // --- COLLAPSE LOGIC ---
       if (headerLogo) {
         headerLogo.classList.remove('hidden');
       }
-
       sidebar.classList.remove('w-64');
       sidebar.classList.add('w-16');
       mainContent.classList.remove('ml-64');
       mainContent.classList.add('ml-16');
-
       sidebarLogo.classList.remove('justify-between');
       sidebarLogo.classList.add('justify-center');
-
       document.querySelectorAll('.sidebar-text').forEach(text => {
         text.classList.add('hidden');
       });
-
       document.getElementById('sidebar-logo-img').classList.add('hidden');
       sidebarDivider.classList.remove('mx');
       sidebarDivider.classList.add('mx-2');
       document.querySelector('.sidebar-signin').classList.add('hidden');
-
       document.querySelectorAll('.sidebar-menu a').forEach(link => {
         link.classList.remove('p-2');
         link.classList.add('p-1', 'justify-center');
       });
-
       document.querySelectorAll('.sidebar-menu svg').forEach(svg => {
         svg.classList.add('m-1');
       });
-
       const helperIcons = document.querySelector('.sidebar-helper-icons .flex');
       helperIcons.classList.remove('justify-between');
       helperIcons.classList.add('flex-col', 'gap-2', 'items-center');
-
       const emailIcon = helperIcons.children[0].children[1];
       emailIcon.classList.add('hidden');
-
       document.querySelectorAll('.sidebar-helper-icons .p-2').forEach(icon => {
         icon.classList.remove('p-2');
         icon.classList.add('p-2');
       });
-
       const collapseIcon = collapseBtn.querySelector('svg');
       collapseIcon.classList.add('-rotate-90');
-
       document.querySelector('.sidebar-helper-icons .flex').classList.remove('justify-between');
       document.querySelector('.sidebar-helper-icons .flex').classList.add('justify-center');
       document.querySelector('.sidebar-helper-icons .flex > div').classList.remove('flex', 'gap-4');
@@ -168,49 +186,39 @@ document.addEventListener('DOMContentLoaded', function () {
       document.querySelector('.sidebar-helper-icons .flex > div').children[1].classList.add('hidden');
 
     } else {
+      // --- EXPAND LOGIC ---
       if (headerLogo) {
         headerLogo.classList.add('hidden');
       }
-
       sidebar.classList.remove('w-16');
       sidebar.classList.add('w-64');
       mainContent.classList.remove('ml-16');
       mainContent.classList.add('ml-64');
-
       sidebarLogo.classList.add('justify-between');
       sidebarLogo.classList.remove('justify-center');
-
       setTimeout(() => {
         document.querySelectorAll('.sidebar-text').forEach(text => {
           text.classList.remove('hidden');
         });
-
         document.getElementById('sidebar-logo-img').classList.remove('hidden');
         document.querySelector('.sidebar-signin').classList.remove('hidden');
       }, 150);
-
       sidebarDivider.classList.add('mx');
       sidebarDivider.classList.remove('mx-2');
-
       document.querySelectorAll('.sidebar-menu a').forEach(link => {
         link.classList.add('p-2');
         link.classList.remove('p-1', 'justify-center');
       });
-
       document.querySelectorAll('.sidebar-menu svg').forEach(svg => {
         svg.classList.remove('m-1');
       });
-
       const helperIcons = document.querySelector('.sidebar-helper-icons .flex');
       helperIcons.classList.add('justify-between');
       helperIcons.classList.remove('flex-col', 'gap-2', 'items-center');
-
       const emailIcon = helperIcons.children[0].children[1];
       emailIcon.classList.remove('hidden');
-
       const collapseIcon = collapseBtn.querySelector('svg');
       collapseIcon.classList.remove('-rotate-90');
-
       document.querySelector('.sidebar-helper-icons .flex').classList.add('justify-between');
       document.querySelector('.sidebar-helper-icons .flex').classList.remove('justify-center');
       document.querySelector('.sidebar-helper-icons .flex > div').classList.add('flex', 'gap-4');
@@ -220,11 +228,21 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// ========== Search Bar Clear Button Functionality ==========
+// =============================================================================
+// II. SEARCH BAR CLEAR BUTTON
+// =============================================================================
+/**
+ * Shows a clear button (X) in the search bar when there is input text.
+ * Allows the user to quickly clear the search query.
+ */
 document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.querySelector('input[type="search"]');
   const clearIcon = document.querySelector('.absolute.right-20');
+
   if (searchInput && clearIcon) {
+    /**
+     * Toggles the visibility of the clear icon based on search input content.
+     */
     function toggleClearButton() {
       if (searchInput.value.trim() !== '') {
         clearIcon.classList.remove('hidden');
@@ -233,69 +251,90 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    // Event listeners for real-time feedback
     searchInput.addEventListener('input', toggleClearButton);
-
     clearIcon.addEventListener('click', function () {
       searchInput.value = '';
-      clearIcon.classList.add('hidden');
+      toggleClearButton();
       searchInput.focus();
     });
 
+    // Initial state check
     toggleClearButton();
   }
 });
 
-// ========== PC Navigation Active State ==========
+// =============================================================================
+// III. DESKTOP NAVIGATION ACTIVE STATE
+// =============================================================================
+/**
+ * Manages the visual active state (underline) for the main desktop navigation items.
+ */
 document.addEventListener('DOMContentLoaded', function () {
   const navItems = document.querySelectorAll('.nav-item');
   const moreBtn = document.getElementById('more-btn');
 
+  // Add click listeners to all navigation items
   navItems.forEach(item => {
     item.addEventListener('click', function () {
+      // Reset all items before setting the new active one
       navItems.forEach(nav => nav.classList.remove('active'));
       if (moreBtn) moreBtn.classList.remove('active');
       this.classList.add('active');
-      console.log('Selected:', this.textContent.trim());
     });
   });
 
+  // Special handling for the "More" button
   if (moreBtn) {
     moreBtn.addEventListener('click', function () {
       navItems.forEach(nav => nav.classList.remove('active'));
       this.classList.add('active');
-      console.log('Selected: More');
     });
   }
 
+  // Set the first item as active by default
   const defaultItem = document.querySelector('.nav-item');
   if (defaultItem) {
     defaultItem.classList.add('active');
   }
 });
 
-// ========== Responsive Navbar with More Button ==========
+// =============================================================================
+// IV. RESPONSIVE "MORE" BUTTON FOR NAVIGATION
+// =============================================================================
+/**
+ * Dynamically moves navigation items into a "More" dropdown when there
+ * is not enough horizontal space to display them all.
+ */
 document.addEventListener('DOMContentLoaded', function () {
+  // DOM element references
   const navbarContainer = document.querySelector('nav .flex.justify-between.items-center');
   const navbarMenu = document.getElementById('navbar-menu');
   const moreBtn = document.getElementById('more-btn');
   const hiddenItems = document.getElementById('hidden-items');
   const rightSection = navbarContainer.querySelector('ul:last-child');
   const filtersSection = document.getElementById('filters-section');
+
+  // State management
   let allItems = [];
   let isMoreOpen = false;
 
+  /**
+   * Initializes the navigation items array from the DOM.
+   */
   function initNavbar() {
     const items = navbarMenu.querySelectorAll('.nav-item:not(#more-btn)');
     allItems = Array.from(items);
-    console.log('Found navigation items:', allItems.length);
   }
 
+  /**
+   * Checks if all navigation items fit and moves them to the "More"
+   * dropdown if necessary.
+   */
   function checkNavbarFit() {
-    if (allItems.length === 0) {
-      console.log('No navigation items found');
-      return;
-    }
+    if (allItems.length === 0) return;
 
+    // Calculate available width, accounting for other elements in the navbar
     const containerWidth = navbarContainer.offsetWidth;
     const rightSectionWidth = rightSection.offsetWidth;
     const filtersSectionWidth = filtersSection ? filtersSection.offsetWidth : 0;
@@ -305,9 +344,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentWidth = 0;
     let visibleCount = 0;
-    const itemGap = 16;
-    const moreButtonWidth = 80;
+    const itemGap = 16; // Gap between items
+    const moreButtonWidth = 80; // Estimated width of the "More" button
 
+    // Determine how many items can be visible
     for (let i = 0; i < allItems.length; i++) {
       const itemWidth = allItems[i].offsetWidth + itemGap;
       const willNeedMoreButton = (i < allItems.length - 1);
@@ -321,28 +361,26 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    console.log(`Visible items: ${visibleCount}, Total items: ${allItems.length}`);
-
+    // Toggle visibility of items based on calculation
     allItems.forEach((item, index) => {
-      if (index < visibleCount) {
-        item.classList.remove('hidden');
-      } else {
-        item.classList.add('hidden');
-      }
+      item.classList.toggle('hidden', index >= visibleCount);
     });
 
+    // Manage the "More" button and its dropdown
     if (visibleCount < allItems.length) {
       moreBtn.classList.remove('hidden');
       updateMoreDropdown(visibleCount);
-      console.log('More button shown, hidden items:', allItems.length - visibleCount);
     } else {
       moreBtn.classList.add('hidden');
       hiddenItems.innerHTML = '';
       isMoreOpen = false;
-      console.log('More button hidden - all items fit');
     }
   }
 
+  /**
+   * Populates the "More" dropdown with items that are currently hidden.
+   * @param {number} visibleCount - The number of items currently visible in the main navbar.
+   */
   function updateMoreDropdown(visibleCount) {
     hiddenItems.innerHTML = '';
     hiddenItems.style.display = 'none';
@@ -351,79 +389,62 @@ document.addEventListener('DOMContentLoaded', function () {
       const li = document.createElement('li');
       li.className = 'block px-4 py-2 text-white cursor-pointer hover:bg-gray-700 whitespace-nowrap';
       li.textContent = allItems[i].textContent.trim();
-
-      li.addEventListener('click', function (e) {
+      li.addEventListener('click', (e) => {
         e.stopPropagation();
-        console.log('Clicked hidden item:', this.textContent);
         hiddenItems.style.display = 'none';
         isMoreOpen = false;
       });
-
       hiddenItems.appendChild(li);
-      console.log('Added item to dropdown:', allItems[i].textContent);
     }
-
-    console.log(`Added ${allItems.length - visibleCount} items to dropdown`);
   }
 
+  // Event listener for the "More" button
   moreBtn.addEventListener('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
-
     isMoreOpen = !isMoreOpen;
-    console.log('More button clicked, isOpen:', isMoreOpen);
-
-    if (isMoreOpen) {
-      hiddenItems.classList.remove('hidden');
-      hiddenItems.style.display = 'block';
-      console.log('Dropdown opened');
-      console.log('Dropdown position:', hiddenItems.getBoundingClientRect());
-      console.log('Dropdown has children:', hiddenItems.children.length);
-    } else {
-      hiddenItems.classList.add('hidden');
-      hiddenItems.style.display = 'none';
-      console.log('Dropdown closed');
-    }
+    hiddenItems.style.display = isMoreOpen ? 'block' : 'none';
   });
 
+  // Global click listener to close the dropdown when clicking outside
   document.addEventListener('click', function (e) {
     if (isMoreOpen && !moreBtn.contains(e.target) && !hiddenItems.contains(e.target)) {
-      hiddenItems.classList.add('hidden');
       hiddenItems.style.display = 'none';
       isMoreOpen = false;
-      console.log('Dropdown closed by outside click');
     }
   });
 
+  // Initial setup and responsive listeners
   setTimeout(() => {
     initNavbar();
     checkNavbarFit();
-  }, 300);
+  }, 300); // Delay to ensure all elements are rendered
 
   let resizeTimeout;
-  window.addEventListener('resize', function () {
+  window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      checkNavbarFit();
-    }, 150);
+    resizeTimeout = setTimeout(checkNavbarFit, 150);
   });
 
+  // Re-check when filters are shown/hidden as it affects available space
   if (filtersSection) {
-    const observer = new MutationObserver(function () {
+    new MutationObserver(() => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(checkNavbarFit, 100);
-    });
-
-    observer.observe(filtersSection, {
-      childList: true,
-      subtree: true,
+    }).observe(filtersSection, {
       attributes: true,
       attributeFilter: ['class', 'style']
     });
   }
 });
 
-// ========== close theme popup ========== 
+// =============================================================================
+// V. GLOBAL POPUP/DETAILS CLOSE HANDLER
+// =============================================================================
+/**
+ * Closes any open <details> elements (like the theme switcher) when a click
+ * occurs outside of them.
+ */
 document.addEventListener('click', function (e) {
   const details = document.querySelectorAll('details');
   details.forEach(detail => {
@@ -433,7 +454,12 @@ document.addEventListener('click', function (e) {
   });
 });
 
-// ========== filter toggle ========== 
+// =============================================================================
+// VI. DESKTOP FILTER SECTION TOGGLE
+// =============================================================================
+/**
+ * Toggles the visibility of the main filter bar on desktop view.
+ */
 const chevron = document.querySelector('.chevron');
 const target = document.getElementById('filters-section');
 let isDown = false;
@@ -448,7 +474,12 @@ chevron?.addEventListener('click', () => {
   }
 });
 
-// ========== relevance toggle ========== 
+// =============================================================================
+// VII. DESKTOP RELEVANCE/SORT POPUP TOGGLE
+// =============================================================================
+/**
+ * Toggles the visibility of the "Relevance" or "Sort by" popup on desktop.
+ */
 const relevanceChevron = document.getElementById('relevance-chevron');
 const relevancePopup = document.getElementById('relevance-popup');
 
@@ -456,9 +487,17 @@ relevanceChevron?.addEventListener('click', () => {
   relevancePopup.classList.toggle('hidden');
 });
 
-// ========== FIXED filter popups toggle ========== 
+// =============================================================================
+// VIII. DESKTOP FILTER POPUPS MANAGER
+// =============================================================================
+/**
+ * Manages the behavior of all filter popups on the desktop view.
+ * - Ensures only one popup can be open at a time.
+ * - Handles correct positioning relative to the trigger button.
+ * - Closes popups when clicking outside.
+ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Get all filter elements
+  // Configuration for all filter popups
   const filterElements = [
     { btn: 'license-btn', popup: 'license-popup', chevron: 'license-chevron' },
     { btn: 'ai-btn', popup: 'ai-popup', chevron: 'ai-chevron' },
@@ -469,54 +508,39 @@ document.addEventListener('DOMContentLoaded', () => {
     { btn: 'advanced-btn', popup: 'advanced-popup', chevron: 'advanced-chevron' }
   ];
 
-  // Nested popups inside people filter
+  // Configuration for nested popups (e.g., within the "People" filter)
   const nestedElements = [
     { btn: 'gender-btn', popup: 'gender-popup', chevron: 'gender-chevron' },
     { btn: 'age-btn', popup: 'age-popup', chevron: 'age-chevron' },
     { btn: 'ethnicity-btn', popup: 'ethnicity-popup', chevron: 'ethnicity-chevron' }
   ];
 
-  // FIXED: Function to position popup correctly using absolute positioning
+  /**
+   * Positions a popup correctly below its trigger button.
+   * This is crucial for popups in a sticky or scrolling header.
+   * @param {HTMLElement} button - The button that triggers the popup.
+   * @param {HTMLElement} popup - The popup element to position.
+   */
   function positionPopup(button, popup) {
-    // Get the filters section container
-    const filtersSection = document.getElementById('filters-section');
-    const sectionRect = filtersSection.getBoundingClientRect();
     const buttonRect = button.getBoundingClientRect();
-    
-    // Calculate position relative to filters section
-    const leftOffset = buttonRect.left - sectionRect.left;
-    const topOffset = buttonRect.bottom - sectionRect.top + 8; // 8px gap
-    
-    // Set absolute position relative to filters section
-    popup.style.position = 'absolute';
-    popup.style.left = leftOffset + 'px';
-    popup.style.top = topOffset + 'px';
-    popup.style.zIndex = '1000'; // Higher than other elements
-    
-    // Ensure popup stays within screen bounds
-    const popupRect = popup.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    
-    if (popupRect.right > viewportWidth) {
-      // Adjust position if popup goes off-screen
-      const adjustment = viewportWidth - popupRect.right - 10; // 10px margin
-      popup.style.left = (leftOffset + adjustment) + 'px';
-    }
-    
-    console.log(`Positioned ${popup.id} at left: ${leftOffset}px, top: ${topOffset}px`);
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    popup.style.left = (buttonRect.left + scrollLeft) + 'px';
+    popup.style.top = (buttonRect.bottom + 8) + 'px'; // 8px gap
   }
 
-  // Function to close all popups
+  /**
+   * Closes all open popups.
+   * @param {HTMLElement} [except=null] - A popup element to exclude from closing.
+   */
   function closeAllPopups(except = null) {
     [...filterElements, ...nestedElements].forEach(element => {
       const popup = document.getElementById(element.popup);
       const chevron = document.getElementById(element.chevron);
-
       if (popup && popup !== except) {
         popup.classList.add('hidden');
         popup.style.display = '';
       }
-      if (chevron && chevron !== except) {
+      if (chevron && chevron !== except?.previousElementSibling?.querySelector('svg')) {
         chevron.classList.remove('rotate-180');
       }
     });
@@ -531,35 +555,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn && popup) {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-
-        // Check if currently open
         const isHidden = popup.classList.contains('hidden');
-
-        // Close all other popups first
         closeAllPopups(popup);
-
-        // Toggle current popup
         if (isHidden) {
-          // Position the popup correctly before showing
           positionPopup(btn, popup);
           popup.classList.remove('hidden');
           if (chevron) chevron.classList.add('rotate-180');
-          console.log(`Opened ${element.popup}`);
-        } else {
-          popup.classList.add('hidden');
-          if (chevron) chevron.classList.remove('rotate-180');
-          console.log(`Closed ${element.popup}`);
         }
       });
-
-      // Prevent popup from closing when clicking inside it
-      popup.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
+      popup.addEventListener('click', (e) => e.stopPropagation());
     }
   });
 
-  // Add event listeners for nested popups (inside people filter)
+  // Add event listeners for nested filter buttons
   nestedElements.forEach(element => {
     const btn = document.getElementById(element.btn);
     const popup = document.getElementById(element.popup);
@@ -568,68 +576,55 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn && popup) {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-
-        // Check if currently open
         const isHidden = popup.classList.contains('hidden');
-
-        // Close other nested popups
-        nestedElements.forEach(otherElement => {
-          if (otherElement.popup !== element.popup) {
-            const otherPopup = document.getElementById(otherElement.popup);
-            const otherChevron = document.getElementById(otherElement.chevron);
-            if (otherPopup) {
-              otherPopup.classList.add('hidden');
-              otherPopup.style.display = '';
-            }
-            if (otherChevron) otherChevron.classList.remove('rotate-180');
+        // Close only other nested popups
+        nestedElements.forEach(other => {
+          if (other.popup !== element.popup) {
+            document.getElementById(other.popup)?.classList.add('hidden');
+            document.getElementById(other.chevron)?.classList.remove('rotate-180');
           }
         });
-
-        // Toggle current nested popup
         if (isHidden) {
           popup.classList.remove('hidden');
           if (chevron) chevron.classList.add('rotate-180');
-          console.log(`Opened nested ${element.popup}`);
         } else {
           popup.classList.add('hidden');
           if (chevron) chevron.classList.remove('rotate-180');
-          console.log(`Closed nested ${element.popup}`);
         }
       });
-
-      // Prevent popup from closing when clicking inside it
-      popup.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
+      popup.addEventListener('click', (e) => e.stopPropagation());
     }
   });
 
-  // Close all popups when clicking outside
+  // Global click listener to close all popups
   document.addEventListener('click', (e) => {
-    const isFilterButton = e.target.closest('[id$="-btn"]') || e.target.closest('[id$="-chevron"]');
-    const isInsidePopup = e.target.closest('[id$="-popup"]');
-
-    if (!isFilterButton && !isInsidePopup) {
+    const isInsideFilter = e.target.closest('[id$="-btn"], [id$="-chevron"], [id$="-popup"]');
+    if (!isInsideFilter) {
       closeAllPopups();
     }
   });
 
-  // FIXED: Reposition popups on scroll or resize
-  function repositionAllPopups() {
+  // Reposition popups on scroll and resize to keep them anchored
+  window.addEventListener('scroll', () => {
     filterElements.forEach(element => {
       const btn = document.getElementById(element.btn);
       const popup = document.getElementById(element.popup);
-
       if (btn && popup && !popup.classList.contains('hidden')) {
         positionPopup(btn, popup);
       }
     });
-  }
+  });
+  window.addEventListener('resize', () => {
+    filterElements.forEach(element => {
+      const btn = document.getElementById(element.btn);
+      const popup = document.getElementById(element.popup);
+      if (btn && popup && !popup.classList.contains('hidden')) {
+        positionPopup(btn, popup);
+      }
+    });
+  });
 
-  window.addEventListener('scroll', repositionAllPopups);
-  window.addEventListener('resize', repositionAllPopups);
-
-  // Initialize all popups as hidden
+  // Ensure all popups are hidden on initial load
   [...filterElements, ...nestedElements].forEach(element => {
     const popup = document.getElementById(element.popup);
     if (popup) {
@@ -639,21 +634,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// ========== People Count Button Selection ==========
+// =============================================================================
+// IX. BUTTON GROUP ACTIVE STATE
+// =============================================================================
+/**
+ * Manages the visual active state for button groups (e.g., People count,
+ * Author mode, Result variety).
+ */
 document.querySelectorAll('.people-count-btn').forEach(btn => {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.people-count-btn').forEach(b => b.classList.remove('bg-green-600'));
     this.classList.add('bg-green-600');
   });
 });
-
 document.querySelectorAll('.author-mode-btn').forEach(btn => {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.author-mode-btn').forEach(b => b.classList.remove('bg-green-600'));
     this.classList.add('bg-green-600');
   });
 });
-
 document.querySelectorAll('.result-variety-btn').forEach(btn => {
   btn.addEventListener('click', function () {
     document.querySelectorAll('.result-variety-btn').forEach(b => b.classList.remove('bg-green-600'));
@@ -661,38 +660,47 @@ document.querySelectorAll('.result-variety-btn').forEach(btn => {
   });
 });
 
-// ========== Mobile Sidebar Overlay Functionality ==========
+// =============================================================================
+// X. MOBILE SIDEBAR & OVERLAY
+// =============================================================================
+/**
+ * Manages the slide-in sidebar for mobile view, including the overlay that
+ * covers the main content.
+ */
 document.addEventListener('DOMContentLoaded', function () {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
   const mobileSidebar = document.getElementById('mobile-sidebar');
   const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
+  // Open sidebar
   mobileMenuBtn?.addEventListener('click', function () {
     mobileSidebarOverlay.classList.remove('hidden');
-    setTimeout(() => {
-      mobileSidebar.classList.remove('-translate-x-full');
-    }, 10);
+    setTimeout(() => mobileSidebar.classList.remove('-translate-x-full'), 10);
   });
 
+  // Close sidebar via button
   mobileSidebarClose?.addEventListener('click', function () {
     mobileSidebar.classList.add('-translate-x-full');
-    setTimeout(() => {
-      mobileSidebarOverlay.classList.add('hidden');
-    }, 300);
+    setTimeout(() => mobileSidebarOverlay.classList.add('hidden'), 300);
   });
 
+  // Close sidebar by clicking the overlay
   mobileSidebarOverlay?.addEventListener('click', function (e) {
     if (e.target === mobileSidebarOverlay) {
       mobileSidebar.classList.add('-translate-x-full');
-      setTimeout(() => {
-        mobileSidebarOverlay.classList.add('hidden');
-      }, 300);
+      setTimeout(() => mobileSidebarOverlay.classList.add('hidden'), 300);
     }
   });
 });
 
-// ========== Mobile 3-Button Navigation ==========
+// =============================================================================
+// XI. MOBILE NAVIGATION DROPDOWNS & SCROLL LOCK
+// =============================================================================
+/**
+ * Manages the three main navigation dropdowns on mobile ("All Images",
+ * "Filters", "Settings") and locks the body scroll when one is open.
+ */
 document.addEventListener('DOMContentLoaded', function () {
   const mobileAllImagesBtn = document.getElementById('mobile-all-images-btn');
   const mobileFiltersBtn = document.getElementById('mobile-filters-btn');
@@ -702,6 +710,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const mobileFiltersDropdown = document.getElementById('mobile-filters-dropdown');
   const mobileSettingsDropdown = document.getElementById('mobile-settings-dropdown');
 
+  /**
+   * Closes all mobile dropdowns and unlocks body scroll.
+   */
   function closeAllMobileDropdowns() {
     if (mobileAllImagesDropdown) {
       mobileAllImagesDropdown.style.display = 'none';
@@ -715,68 +726,69 @@ document.addEventListener('DOMContentLoaded', function () {
       mobileSettingsDropdown.style.display = 'none';
       mobileSettingsDropdown.classList.add('hidden');
     }
+    // Crucially, remove the scroll lock when all dropdowns are closed.
+    document.body.classList.remove('no-scroll');
   }
 
-  mobileAllImagesBtn?.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const isVisible = mobileAllImagesDropdown.style.display === 'block';
+  /**
+   * Generic handler for a mobile dropdown button click.
+   * @param {HTMLElement} dropdown - The dropdown to toggle.
+   */
+  function handleDropdownClick(dropdown) {
+    const isVisible = dropdown.style.display === 'block';
     closeAllMobileDropdowns();
     if (!isVisible) {
-      mobileAllImagesDropdown.style.display = 'block';
-      mobileAllImagesDropdown.classList.remove('hidden');
-      console.log('Opened All Images dropdown');
+      dropdown.style.display = 'block';
+      dropdown.classList.remove('hidden');
+      // Lock the body scroll when a dropdown is open.
+      document.body.classList.add('no-scroll');
     }
-  });
+  }
 
-  mobileFiltersBtn?.addEventListener('click', function (e) {
+  // Event listeners for each button
+  mobileAllImagesBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
-    const isVisible = mobileFiltersDropdown.style.display === 'block';
-    closeAllMobileDropdowns();
-    if (!isVisible) {
-      mobileFiltersDropdown.style.display = 'block';
-      mobileFiltersDropdown.classList.remove('hidden');
-      console.log('Opened Filters dropdown');
-    }
+    handleDropdownClick(mobileAllImagesDropdown);
   });
 
-  mobileSettingsBtn?.addEventListener('click', function (e) {
+  mobileFiltersBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
-    const isVisible = mobileSettingsDropdown.style.display === 'block';
-    closeAllMobileDropdowns();
-    if (!isVisible) {
-      mobileSettingsDropdown.style.display = 'block';
-      mobileSettingsDropdown.classList.remove('hidden');
-      console.log('Opened Settings dropdown');
-    }
+    handleDropdownClick(mobileFiltersDropdown);
   });
 
+  mobileSettingsBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleDropdownClick(mobileSettingsDropdown);
+  });
+
+  // Global click listener to close dropdowns
   document.addEventListener('click', function (e) {
-    const isInsideMobileNav = e.target.closest('#mobile-nav-buttons') ||
-      e.target.closest('#mobile-all-images-dropdown') ||
-      e.target.closest('#mobile-filters-dropdown') ||
-      e.target.closest('#mobile-settings-dropdown');
-
-    if (!isInsideMobileNav) {
+    const isInsideNav = e.target.closest('#mobile-nav-buttons, #mobile-all-images-dropdown, #mobile-filters-dropdown, #mobile-settings-dropdown');
+    if (!isInsideNav) {
       closeAllMobileDropdowns();
     }
   });
 
+  // Update button text and close dropdown on selection
   const radioButtons = document.querySelectorAll('input[name="mobile-navigation"]');
   radioButtons.forEach(radio => {
     radio.addEventListener('change', function () {
       if (this.checked) {
         const selectedText = this.parentElement.querySelector('span').textContent;
         mobileAllImagesBtn.textContent = selectedText;
-        setTimeout(() => {
-          closeAllMobileDropdowns();
-        }, 200);
-        console.log('Selected:', selectedText);
+        setTimeout(closeAllMobileDropdowns, 200);
       }
     });
   });
 });
 
-// ========== Mobile Filter Toggles ==========
+// =============================================================================
+// XII. MOBILE FILTER POPUPS
+// =============================================================================
+/**
+ * Manages the individual filter popups within the main "Filters" dropdown
+ * on mobile view.
+ */
 document.addEventListener('DOMContentLoaded', function () {
   const mobileFilterElements = [
     { btn: 'mobile-license-btn', popup: 'mobile-license-popup' },
@@ -788,6 +800,9 @@ document.addEventListener('DOMContentLoaded', function () {
     { btn: 'mobile-sort-btn', popup: 'mobile-sort-popup' }
   ];
 
+  /**
+   * Closes all individual filter popups.
+   */
   function closeAllMobileFilterPopups() {
     mobileFilterElements.forEach(element => {
       const popup = document.getElementById(element.popup);
@@ -797,12 +812,12 @@ document.addEventListener('DOMContentLoaded', function () {
         popup.style.display = 'none';
       }
       if (btn) {
-        const chevron = btn.querySelector('svg');
-        if (chevron) chevron.classList.remove('rotate-180');
+        btn.querySelector('svg')?.classList.remove('rotate-180');
       }
     });
   }
 
+  // Add event listeners for each filter button
   mobileFilterElements.forEach(element => {
     const btn = document.getElementById(element.btn);
     const popup = document.getElementById(element.popup);
@@ -811,87 +826,39 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const isHidden = popup.classList.contains('hidden');
-        closeAllMobileFilterPopups();
-
+        closeAllMobileFilterPopups(); // Ensure only one is open
         if (isHidden) {
           popup.classList.remove('hidden');
           popup.style.display = 'block';
-          const chevron = btn.querySelector('svg');
-          if (chevron) chevron.classList.add('rotate-180');
-          console.log(`Opened mobile ${element.popup}`);
-        } else {
-          popup.classList.add('hidden');
-          popup.style.display = 'none';
-          const chevron = btn.querySelector('svg');
-          if (chevron) chevron.classList.remove('rotate-180');
-          console.log(`Closed mobile ${element.popup}`);
+          btn.querySelector('svg')?.classList.add('rotate-180');
         }
       });
-
-      popup.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-    }
-  });
-
-  document.addEventListener('click', (e) => {
-    const isInsideMobileFilters = e.target.closest('#mobile-filters-dropdown');
-    const isMobileFilterButton = e.target.closest('[id^="mobile-"][id$="-btn"]');
-
-    if (!isInsideMobileFilters && !isMobileFilterButton) {
-      closeAllMobileFilterPopups();
+      popup.addEventListener('click', (e) => e.stopPropagation());
     }
   });
 });
 
-// ========== Mobile People Filter Selection ==========
+// =============================================================================
+// XIII. FOOTER MOBILE COLLAPSIBLE SECTIONS
+// =============================================================================
+/**
+ * Manages the collapsible accordion sections in the footer for mobile view.
+ */
 document.addEventListener('DOMContentLoaded', function () {
-  const mobileNoPeopleBtn = document.querySelector('.mobile-no-people-btn');
-  const mobilePeopleCountBtns = document.querySelectorAll('.mobile-people-count-btn');
+  const footerToggles = [
+    { btn: 'products-toggle', list: 'products-list', arrow: 'products-arrow' },
+    { btn: 'get-started-toggle', list: 'get-started-list', arrow: 'get-started-arrow' },
+    { btn: 'company-toggle', list: 'company-list', arrow: 'company-arrow' }
+  ];
 
-  mobileNoPeopleBtn?.addEventListener('click', function () {
-    mobilePeopleCountBtns.forEach(btn => btn.classList.remove('bg-green-600'));
-    mobileNoPeopleBtn.classList.remove('bg-green-600');
-    this.classList.add('bg-green-600');
-    console.log('Selected: No people');
-  });
+  footerToggles.forEach(toggle => {
+    const btn = document.getElementById(toggle.btn);
+    const list = document.getElementById(toggle.list);
+    const arrow = document.getElementById(toggle.arrow);
 
-  mobilePeopleCountBtns.forEach(btn => {
-    btn.addEventListener('click', function () {
-      mobilePeopleCountBtns.forEach(b => b.classList.remove('bg-green-600'));
-      mobileNoPeopleBtn.classList.remove('bg-green-600');
-      this.classList.add('bg-green-600');
-      console.log('Selected:', this.textContent, 'people');
+    btn?.addEventListener('click', function () {
+      list.classList.toggle('hidden');
+      arrow.classList.toggle('rotate-180');
     });
-  });
-});
-
-// ========== Footer Mobile Collapsible Sections ==========
-document.addEventListener('DOMContentLoaded', function () {
-  const productsToggle = document.getElementById('products-toggle');
-  const productsList = document.getElementById('products-list');
-  const productsArrow = document.getElementById('products-arrow');
-
-  productsToggle?.addEventListener('click', function () {
-    productsList.classList.toggle('hidden');
-    productsArrow.classList.toggle('rotate-180');
-  });
-
-  const getStartedToggle = document.getElementById('get-started-toggle');
-  const getStartedList = document.getElementById('get-started-list');
-  const getStartedArrow = document.getElementById('get-started-arrow');
-
-  getStartedToggle?.addEventListener('click', function () {
-    getStartedList.classList.toggle('hidden');
-    getStartedArrow.classList.toggle('rotate-180');
-  });
-
-  const companyToggle = document.getElementById('company-toggle');
-  const companyList = document.getElementById('company-list');
-  const companyArrow = document.getElementById('company-arrow');
-
-  companyToggle?.addEventListener('click', function () {
-    companyList.classList.toggle('hidden');
-    companyArrow.classList.toggle('rotate-180');
   });
 });
