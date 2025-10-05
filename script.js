@@ -1,11 +1,3 @@
-/**
- * @file script-test.js
- * @description This file contains all the client-side JavaScript functionality
- * for the Freepik clone project. It handles responsive behaviors,
- * interactive UI elements like sidebars, navigation, and popups,
- * and other dynamic features.
- */
-
 // =============================================================================
 // I. SIDEBAR COLLAPSE FUNCTIONALITY
 // =============================================================================
@@ -861,4 +853,149 @@ document.addEventListener('DOMContentLoaded', function () {
       arrow.classList.toggle('rotate-180');
     });
   });
+});
+
+// =============================================================================
+// XIV. DYNAMIC IMAGE CARD ICONS
+// =============================================================================
+/**
+ * Dynamically generates interactive overlay icons for image cards
+ * while keeping images static in HTML
+ */
+document.addEventListener('DOMContentLoaded', function () {
+
+  // SVG icon templates
+  const icons = {
+    download: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+    </svg>`,
+
+    edit: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
+    </svg>`,
+
+    save: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>`,
+
+    search: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
+    </svg>`
+  };
+
+  /**
+   * Creates the overlay elements for an image card
+   */
+  function createImageOverlay() {
+    return `
+      <!-- Dark overlay -->
+      <div class="overlay absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg"></div>
+      
+      <!-- Top action buttons -->
+      <div class="action-buttons absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
+        <button title="Download" class="download-btn p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700 transition" data-action="download">
+          ${icons.download}
+        </button>
+        <button title="Edit with AI" class="edit-btn p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700 transition" data-action="edit">
+          ${icons.edit}
+        </button>
+        <button title="Save to collection" class="save-btn p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700 transition" data-action="save">
+          ${icons.save}
+        </button>
+      </div>
+      
+      <!-- Bottom discover button -->
+      <div class="discover-section absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <button class="discover-btn flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90 transition" data-action="discover">
+          ${icons.search}
+          Discover similar
+        </button>
+      </div>
+    `;
+  }
+
+  /**
+   * Initialize all image cards with dynamic overlays
+   */
+  function initializeImageCards() {
+    const imageCards = document.querySelectorAll('.image-card');
+
+    imageCards.forEach(card => {
+      // Add overlay elements
+      card.innerHTML += createImageOverlay();
+
+      // Add click event listeners for each action
+      const downloadBtn = card.querySelector('.download-btn');
+      const editBtn = card.querySelector('.edit-btn');
+      const saveBtn = card.querySelector('.save-btn');
+      const discoverBtn = card.querySelector('.discover-btn');
+
+      const imageId = card.dataset.image;
+      const imageAlt = card.querySelector('img').alt;
+
+      // Download functionality
+      downloadBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleImageAction('download', imageId, imageAlt);
+      });
+
+      // Edit functionality
+      editBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleImageAction('edit', imageId, imageAlt);
+      });
+
+      // Save functionality
+      saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleImageAction('save', imageId, imageAlt);
+      });
+
+      // Discover similar functionality
+      discoverBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleImageAction('discover', imageId, imageAlt);
+      });
+    });
+  }
+
+  /**
+   * Handle different image actions
+   */
+  function handleImageAction(action, imageId, imageAlt) {
+    switch (action) {
+      case 'download':
+        console.log(`Downloading image ${imageId}: ${imageAlt}`);
+        // Download logic here
+        downloadImage(imageId);
+        break;
+
+      case 'edit':
+        console.log(`Editing image ${imageId}: ${imageAlt}`);
+        // Edit logic here
+        openImageEditor(imageId);
+        break;
+
+      case 'save':
+        console.log(`Saving image ${imageId}: ${imageAlt}`);
+        // Save logic here
+        saveToCollection(imageId);
+        showNotification('Image saved to collection!');
+        break;
+
+      case 'discover':
+        console.log(`Finding similar images to ${imageId}: ${imageAlt}`);
+        // Discover logic here
+        findSimilarImages(imageId);
+        break;
+
+      default:
+        console.log('Unknown action:', action);
+    }
+  }
+
+
+  // INITIALIZATION
+  // Start the image card system once the DOM is fully loaded
+  initializeImageCards();
 });

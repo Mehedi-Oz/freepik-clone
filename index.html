@@ -1385,659 +1385,74 @@
 
     </header>
 
-
-    <!-- Main Content -->
+    <!-- 
+      Main Content Area
+    -->
     <div id="main-content" class="main-content py-6 px-10">
 
-
+      <!-- Search Results Header -->
       <div class="tag flex gap-2 text-white px-2 text-sm">
         <h1 class="font-bold">Popular</h1>
         <p>172.8m results</p>
       </div>
 
-      <div class="columns-1 sm:columns-2 md:columns-3 gap-4 my-5">
-        <div class="relative group mb-4">
+      <!-- 
+        Image Gallery
+      -->
+      <div id="image-gallery" class="columns-1 sm:columns-2 md:columns-3 gap-4 my-5">
+        <div class="image-card relative group mb-4" data-image="1">
           <img src="assets/search-images/image (1).jpg" class="rounded-lg w-full" alt="Image 1">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="2">
           <img src="assets/search-images/image (2).jpg" class="rounded-lg w-full" alt="Image 2">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="3">
           <img src="assets/search-images/image (3).jpg" class="rounded-lg w-full" alt="Image 3">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="4">
           <img src="assets/search-images/image (4).jpg" class="rounded-lg w-full" alt="Image 4">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="5">
           <img src="assets/search-images/image (5).jpg" class="rounded-lg w-full" alt="Image 5">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="6">
           <img src="assets/search-images/image (6).jpg" class="rounded-lg w-full" alt="Image 6">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="7">
           <img src="assets/search-images/image (7).jpg" class="rounded-lg w-full" alt="Image 7">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="8">
           <img src="assets/search-images/image (8).jpg" class="rounded-lg w-full" alt="Image 8">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="9">
           <img src="assets/search-images/image (9).jpg" class="rounded-lg w-full" alt="Image 9">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="10">
           <img src="assets/search-images/image (10).jpg" class="rounded-lg w-full" alt="Image 10">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="11">
           <img src="assets/search-images/image (11).jpg" class="rounded-lg w-full" alt="Image 11">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="12">
           <img src="assets/search-images/image (12).jpg" class="rounded-lg w-full" alt="Image 12">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="13">
           <img src="assets/search-images/image (13).jpg" class="rounded-lg w-full" alt="Image 13">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="14">
           <img src="assets/search-images/image (14).jpg" class="rounded-lg w-full" alt="Image 14">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="15">
           <img src="assets/search-images/image (15).jpg" class="rounded-lg w-full" alt="Image 15">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
-        <div class="relative group mb-4">
+        <div class="image-card relative group mb-4" data-image="16">
           <img src="assets/search-images/image (16).jpg" class="rounded-lg w-full" alt="Image 16">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg">
-          </div>
-          <div
-            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-            <button title="Download" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </button>
-            <button title="Edit with AI" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-              </svg>
-            </button>
-            <button title="Save to collection" class="p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-            </button>
-          </div>
-          <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              class="flex items-center gap-2 text-white bg-gray-800 bg-opacity-70 rounded-full px-3 py-1 text-sm hover:bg-opacity-90">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-              </svg>
-              Discover similar
-            </button>
-          </div>
         </div>
       </div>
 
+      <!-- 
+        Suggested Search Tags
+      -->
       <div class="overflow-x-auto whitespace-nowrap scrollbar-hide">
         <ul class="flex gap-3 text-xs text-white my-3">
           <li class="border px-2 py-2 rounded-full border-gray-600 hover:border-gray-500 inline-block">Create an AI
@@ -2071,9 +1486,11 @@
         </ul>
       </div>
 
-
-      <!-- Next Page Button -->
+      <!-- 
+        Pagination Controls
+      -->
       <div class="next-page flex items-center justify-between mt-10 px-6">
+        <!-- Next page button (centered on mobile, left-aligned on desktop) -->
         <div class="flex-1 flex justify-center max-sm:w-full">
           <button
             class="flex items-center bg-white text-gray-800 px-4 py-2 rounded gap-2 hover:bg-gray-100 transition max-sm:w-full max-sm:justify-center">
@@ -2085,6 +1502,7 @@
           </button>
         </div>
 
+        <!-- Page input control (hidden on mobile) -->
         <p class="text-sm text-white flex items-center gap-2 max-sm:hidden">
           Page
           <input type="text" class="rounded bg-gray-600 w-12 px-2 py-1 text-center">
@@ -2092,19 +1510,23 @@
         </p>
       </div>
 
-
+      <!-- Content separator -->
       <hr class="border-t border-gray-500 my-10 max-sm:hidden">
     </div>
 
-    <!-- Footer -->
+    <!-- 
+      Footer
+    -->
     <footer class="text-white px-6 lg:px-20 py-10 text-sm">
 
+      <!-- Company logo -->
       <div class="mb-8 text-center lg:text-left">
         <img class="w-[130px] mx-auto lg:mx-0" src="assets/logo/freepik-logo.png" alt="freepik-logo">
       </div>
 
-      <!-- Desktop Layout (1024px+) -->
+      <!-- Desktop Layout: 4-column grid -->
       <div class="hidden lg:grid lg:grid-cols-4 gap-10">
+        <!-- Products column -->
         <ul class="space-y-2">
           <li class="font-semibold select-none text-gray-500">Products</li>
           <li>AI Assistant</li>
@@ -2117,6 +1539,7 @@
           <li>All Freepik tools</li>
         </ul>
 
+        <!-- Get started column -->
         <ul class="space-y-2">
           <li class="font-semibold select-none text-gray-500">Get started</li>
           <li>Pricing</li>
@@ -2130,6 +1553,7 @@
           <li>Cookies settings</li>
         </ul>
 
+        <!-- Company column -->
         <ul class="space-y-2">
           <li class="font-semibold select-none text-gray-500">Company</li>
           <li>About us</li>
@@ -2142,43 +1566,54 @@
           <li>Help center</li>
         </ul>
 
+        <!-- Contact and social media column -->
         <ul class="space-y-4 w-[250px] text-sm">
           <li class="font-semibold select-none text-gray-500">Get in touch</li>
+          <!-- Social media icons grid -->
           <li class="mt-5">
             <div class="grid grid-cols-4 gap-3">
+              <!-- Facebook -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.3l-.4 3h-1.9v7A10 10 0 0 0 22 12z" />
               </svg>
+              <!-- Twitter/X -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19.6 5.3 13.2 12l6.9 6.7h-2.2l-6-5.8-6 5.8H3.7l7.1-7-6.6-6.4h2.2l5.7 5.5 5.7-5.5h2.2z" />
               </svg>
+              <!-- Instagram -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm0 7.5a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm4.8-7.8a1 1 0 1 1-1-1 1 1 0 0 1 1 1z" />
               </svg>
+              <!-- YouTube -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M10 15.5v-7l6 3.5-6 3.5zM21.8 8s-.2-1.4-.8-2c-.8-.8-1.7-.8-2.2-.9C16.2 5 12 5 12 5s-4.2 0-6.8.1c-.5 0-1.4.1-2.2.9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.6c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.9.8 2.4.9 1.8.2 7.4.2 7.4.2s4.2 0 6.8-.1c.5 0 1.4-.1 2.2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.6c0-1.6-.2-3.2-.2-3.2z" />
               </svg>
+              <!-- LinkedIn -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 8.98h4v12H3v-12zm7.5 0h3.6v1.6h.1c.5-.9 1.7-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.4v6.8h-4v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1v6.1h-4v-12z" />
               </svg>
+              <!-- Pinterest -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 .1-2.9.2-.7 1.3-4.4 1.3-4.4s-.3-.6-.3-1.5c0-1.4.8-2.5 1.8-2.5.8 0 1.2.6 1.2 1.4 0 .9-.6 2.3-.9 3.6-.3 1 .7 1.8 1.6 1.8 2 0 3.5-2.1 3.5-5.1 0-2.7-2-4.6-4.8-4.6-3.3 0-5.2 2.5-5.2 5.1 0 1 .4 2.1 1 2.7.1.1.1.2.1.3-.1.3-.3 1-.4 1.2-.1.2-.2.3-.4.2-1.2-.5-2-2.1-2-3.4 0-2.8 2-5.4 5.8-5.4 3.1 0 5.5 2.2 5.5 5.2 0 3.1-2 5.6-4.8 5.6-1 0-1.9-.5-2.2-1.1l-.6 2.3c-.2.9-.7 2-1 2.7A10 10 0 1 0 12 2z" />
               </svg>
+              <!-- TikTok -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M16.5 3.5c1.1 1.1 2.4 1.8 4 1.9v3.1c-1.6-.1-3.1-.7-4.4-1.6v6.9c0 3.1-2.5 5.6-5.6 5.6S5.9 16.9 5.9 13.8s2.5-5.6 5.6-5.6c.4 0 .8 0 1.2.1v3.1c-.4-.1-.8-.2-1.2-.2-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5V2h3.5v1.5z" />
               </svg>
+              <!-- Behance -->
               <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 2c-3.6 0-6.5 2.9-6.5 6.5 0 2.3 1.2 4.3 3.1 5.5-.3.4-.7.8-1.2 1.1-.6.4-1.3.6-2 .7-.4.1-.7.5-.6.9.1.4.5.7.9.8 1.2.2 2.2.6 2.9 1.2.3.3.6.7.9 1 .6.6 1.3 1.1 2.1 1.1s1.5-.5 2.1-1.1c.3-.3.6-.7.9-1 .7-.6 1.7-1 2.9-1.2.4-.1.8-.4.9-.8.1-.4-.2-.8-.6-.9-.7-.1-1.4-.3-2-.7-.5-.3-.9-.7-1.2-1.1 1.9-1.2 3.1-3.2 3.1-5.5C18.5 4.9 15.6 2 12 2z" />
               </svg>
             </div>
           </li>
+          <!-- Language selector -->
           <li>
             <select class="bg-gray-800 border border-gray-600 rounded px-5 py-2 text-white text-sm">
               <option>English</option>
@@ -2187,13 +1622,14 @@
               <option>Français</option>
             </select>
           </li>
+          <!-- Copyright notice -->
           <li class="text-gray-500">Copyright © 2010–2025 Freepik Company S.L. All rights reserved.</li>
         </ul>
       </div>
 
-      <!-- Mobile Layout -->
+      <!-- Mobile Layout: Collapsible accordion sections -->
       <div class="lg:hidden space-y-6">
-        <!-- Products Section -->
+        <!-- Products accordion -->
         <div>
           <button id="products-toggle"
             class="w-full flex items-center justify-between font-semibold text-gray-500 py-2">
@@ -2215,7 +1651,7 @@
           </ul>
         </div>
 
-        <!-- Get Started Section -->
+        <!-- Get Started accordion -->
         <div>
           <button id="get-started-toggle"
             class="w-full flex items-center justify-between font-semibold text-gray-500 py-2">
@@ -2238,7 +1674,7 @@
           </ul>
         </div>
 
-        <!-- Company Section -->
+        <!-- Company accordion -->
         <div>
           <button id="company-toggle" class="w-full flex items-center justify-between font-semibold text-gray-500 py-2">
             Company
@@ -2259,39 +1695,47 @@
           </ul>
         </div>
 
-        <!-- Get in Touch Section -->
+        <!-- Social media section for mobile -->
         <div class="text-center space-y-4">
           <h3 class="font-semibold text-gray-500">Get in touch</h3>
           <div class="flex justify-center">
             <div class="grid grid-cols-4 gap-4 max-w-xs">
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- Facebook -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.3l-.4 3h-1.9v7A10 10 0 0 0 22 12z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- Twitter/X -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19.6 5.3 13.2 12l6.9 6.7h-2.2l-6-5.8-6 5.8H3.7l7.1-7-6.6-6.4h2.2l5.7 5.5 5.7-5.5h2.2z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- Instagram -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm0 7.5a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm4.8-7.8a1 1 0 1 1-1-1 1 1 0 0 1 1 1z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- YouTube -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M10 15.5v-7l6 3.5-6 3.5zM21.8 8s-.2-1.4-.8-2c-.8-.8-1.7-.8-2.2-.9C16.2 5 12 5 12 5s-4.2 0-6.8.1c-.5 0-1.4.1-2.2.9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.6c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.9.8 2.4.9 1.8.2 7.4.2 7.4.2s4.2 0 6.8-.1c.5 0 1.4-.1 2.2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.6c0-1.6-.2-3.2-.2-3.2z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- LinkedIn -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 8.98h4v12H3v-12zm7.5 0h3.6v1.6h.1c.5-.9 1.7-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.4v6.8h-4v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1v6.1h-4v-12z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- Pinterest -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 .1-2.9.2-.7 1.3-4.4 1.3-4.4s-.3-.6-.3-1.5c0-1.4.8-2.5 1.8-2.5.8 0 1.2.6 1.2 1.4 0 .9-.6 2.3-.9 3.6-.3 1 .7 1.8 1.6 1.8 2 0 3.5-2.1 3.5-5.1 0-2.7-2-4.6-4.8-4.6-3.3 0-5.2 2.5-5.2 5.1 0 1 .4 2.1 1 2.7.1.1.1.2.1.3-.1.3-.3 1-.4 1.2-.1.2-.2.3-.4.2-1.2-.5-2-2.1-2-3.4 0-2.8 2-5.4 5.8-5.4 3.1 0 5.5 2.2 5.5 5.2 0 3.1-2 5.6-4.8 5.6-1 0-1.9-.5-2.2-1.1l-.6 2.3c-.2.9-.7 2-1 2.7A10 10 0 1 0 12 2z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- TikTok -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M16.5 3.5c1.1 1.1 2.4 1.8 4 1.9v3.1c-1.6-.1-3.1-.7-4.4-1.6v6.9c0 3.1-2.5 5.6-5.6 5.6S5.9 16.9 5.9 13.8s2.5-5.6 5.6-5.6c.4 0 .8 0 1.2.1v3.1c-.4-.1-.8-.2-1.2-.2-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5V2h3.5v1.5z" />
               </svg>
-              <svg class="h-6 w-6 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <!-- Behance -->
+              <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 2c-3.6 0-6.5 2.9-6.5 6.5 0 2.3 1.2 4.3 3.1 5.5-.3.4-.7.8-1.2 1.1-.6.4-1.3.6-2 .7-.4.1-.7.5-.6.9.1.4.5.7.9.8 1.2.2 2.2.6 2.9 1.2.3.3.6.7.9 1 .6.6 1.3 1.1 2.1 1.1s1.5-.5 2.1-1.1c.3-.3.6-.7.9-1 .7-.6 1.7-1 2.9-1.2.4-.1.8-.4.9-.8.1-.4-.2-.8-.6-.9-.7-.1-1.4-.3-2-.7-.5-.3-.9-.7-1.2-1.1 1.9-1.2 3.1-3.2 3.1-5.5C18.5 4.9 15.6 2 12 2z" />
               </svg>
@@ -2299,7 +1743,7 @@
           </div>
         </div>
 
-        <!-- Language Selection -->
+        <!-- Language selector for mobile -->
         <div class="text-center">
           <select class="bg-gray-800 border border-gray-600 rounded px-5 py-2 text-white text-sm">
             <option>English</option>
@@ -2309,7 +1753,7 @@
           </select>
         </div>
 
-        <!-- Copyright -->
+        <!-- Copyright for mobile -->
         <div class="text-center text-gray-500 text-xs">
           Copyright © 2010–2025 Freepik Company S.L. All rights reserved.
         </div>
@@ -2319,7 +1763,7 @@
 
   </div>
 
-
+  <!-- External Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
   <script src="script.js"></script>
 </body>
