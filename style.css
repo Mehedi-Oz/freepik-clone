@@ -1,23 +1,9 @@
-/* ============================================================================= */
-/* I. UTILITIES
-/* ============================================================================= */
-
-/**
- * Utility to hide the scrollbar for elements that are scrollable.
- * This is used for a cleaner look on custom scroll containers.
- */
+/* Utility to hide scrollbars for cleaner UI */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* ============================================================================= */
-/* II. SIDEBAR STYLES
-/* ============================================================================= */
-
-/**
- * Defines smooth transitions for the sidebar's width and the main content's
- * margin when the sidebar collapses or expands.
- */
+/* Sidebar transition effects */
 #logo-sidebar {
   transition: width 0.3s ease-in-out;
 }
@@ -27,33 +13,19 @@
   transition: margin-left 0.3s ease-in-out;
 }
 
-/**
- * Prevents a "white flash" or jarring effect on text and images inside the
- * sidebar during collapse/expand animations by syncing their opacity transition.
- */
+/* Sidebar text and logo opacity transition */
 .sidebar-text,
 #sidebar-logo-img,
 .sidebar-signin {
   transition: opacity 0.2s ease-in-out;
 }
 
-/* ============================================================================= */
-/* III. POPUP AND DROPDOWN STYLES
-/* ============================================================================= */
-
-/**
- * WORKAROUND for positioning fixed popups within a scrolling container.
- * The parent needs a `position: relative` for the popups to be anchored correctly.
- */
+/* Filters section positioning */
 #filters-section {
   position: relative;
 }
 
-/**
- * Desktop filter popups are positioned `fixed` to stay in place relative to the
- * viewport, which is necessary when they are triggered from within a sticky header.
- * The `!important` flag is used to override any conflicting inline styles.
- */
+/* Desktop filter popups styling */
 #filters-section [id$="-popup"] {
   position: fixed !important;
   z-index: 9999 !important;
@@ -64,18 +36,12 @@
   display: block !important;
 }
 
-/**
- * Nested popups (like gender/age within the people filter) must be positioned
- * `absolute` relative to their parent popup.
- */
+/* Nested popups positioning */
 #people-popup [id$="-popup"] {
   position: absolute !important;
 }
 
-/**
- * On mobile, filter popups should behave like normal block elements within their
- * container, not fixed to the viewport. These rules override the desktop styles.
- */
+/* Mobile filter dropdown adjustments */
 #mobile-filters-dropdown [id$="-popup"] {
   position: relative !important;
   width: 100% !important;
@@ -94,14 +60,7 @@
   position: relative !important;
 }
 
-/* ============================================================================= */
-/* IV. FORM & INPUT STYLES
-/* ============================================================================= */
-
-/**
- * Hides the default clear ('x') button that appears in search inputs
- * on WebKit and Firefox browsers for a consistent custom design.
- */
+/* Remove default clear button in search inputs */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
@@ -112,14 +71,7 @@ input[type="search"] {
   -moz-appearance: textfield;
 }
 
-/* ============================================================================= */
-/* V. DESKTOP NAVIGATION
-/* ============================================================================= */
-
-/**
- * Creates a bottom border effect for the active/hovered navigation item
- * on the main desktop navigation bar.
- */
+/* Navigation item hover and active effects */
 .nav-item {
   position: relative;
   padding-bottom: 5px;
@@ -132,7 +84,7 @@ input[type="search"] {
   border-bottom-color: white;
 }
 
-/* Similar styling for the "More" button to ensure consistency. */
+/* "More" button hover and active effects */
 #more-btn {
   position: relative;
   padding-bottom: 8px;
@@ -145,35 +97,18 @@ input[type="search"] {
   border-bottom-color: white;
 }
 
-/* ============================================================================= */
-/* VI. MOBILE-SPECIFIC STYLES
-/* ============================================================================= */
-
-/**
- * Prevents the main body from scrolling when a modal or full-screen
- * dropdown is active on mobile.
- */
+/* Prevent body scrolling when modal is active */
 body.no-scroll {
   overflow: hidden;
 }
 
-/**
- * Allows mobile dropdowns (like Filters and Settings) to be scrollable
- * on their own if their content exceeds the viewport height.
- * `calc(100vh - 200px)` provides space for the header and other UI elements.
- */
+/* Scrollable dropdowns on mobile */
 .mobile-dropdown-scroll {
   overflow-y: auto;
   max-height: calc(100vh - 200px);
 }
 
-/* ============================================================================= */
-/* VII. DYNAMIC IMAGE CARD ENHANCEMENTS
-/* ============================================================================= */
-
-/**
- * Enhanced hover effects for image cards
- */
+/* Image card hover effect */
 .image-card {
   transition: transform 0.2s ease;
 }
@@ -182,9 +117,7 @@ body.no-scroll {
   transform: translateY(-2px);
 }
 
-/**
- * Smooth button animations
- */
+/* Button hover animations */
 .action-buttons button,
 .discover-btn {
   transition: all 0.2s ease;
@@ -195,9 +128,7 @@ body.no-scroll {
   transform: scale(1.05);
 }
 
-/**
- * Notification styles
- */
+/* Notification slide-in animation */
 .notification-enter {
   animation: slideInRight 0.3s ease;
 }
@@ -211,4 +142,20 @@ body.no-scroll {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* Smooth scrolling for tags container */
+#tags-container {
+  scroll-behavior: smooth;
+}
+
+/* Arrow button styling */
+#tags-scroll-left,
+#tags-scroll-right {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+#tags-scroll-left:hover,
+#tags-scroll-right:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
