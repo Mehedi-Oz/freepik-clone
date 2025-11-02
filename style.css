@@ -67,10 +67,6 @@ input[type="search"]::-webkit-search-decoration {
   appearance: none;
 }
 
-input[type="search"] {
-  -moz-appearance: textfield;
-}
-
 /* Navigation item hover and active effects */
 .nav-item {
   position: relative;
@@ -159,3 +155,5 @@ body.no-scroll {
 #tags-scroll-right:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
+
+
