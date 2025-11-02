@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let allItems = [];
   let isMoreOpen = false;
 
-  // Build the list of nav items (excluding the More button)
+  // Build the list of nav items
   function initNavbar() {
     const items = navbarMenu.querySelectorAll('.nav-item:not(#more-btn)');
     allItems = Array.from(items);
@@ -377,10 +377,11 @@ document.addEventListener('click', function (e) {
 // Toggles the visibility of the main filter bar on desktop view
 
 const chevron = document.querySelector('.chevron');
+const filtersButton = chevron?.closest('button');
 const target = document.getElementById('filters-section');
 let isDown = false;
 
-chevron?.addEventListener('click', () => {
+filtersButton?.addEventListener('click', () => {
   chevron.innerHTML = isDown
     ? `<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />`
     : `<path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />`;
@@ -393,7 +394,7 @@ chevron?.addEventListener('click', () => {
 
 // Manages desktop filter popups
 document.addEventListener('DOMContentLoaded', () => {
-  // main popup configs (now includes relevance)
+  // main popup configs
   const filterElements = [
     { btn: 'license-btn', popup: 'license-popup', chevron: 'license-chevron' },
     { btn: 'ai-btn', popup: 'ai-popup', chevron: 'ai-chevron' },
@@ -469,27 +470,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Relevance popup handler (integrated with main filter logic)
-  const relevanceChevron = document.getElementById('relevance-chevron');
-  const relevancePopup = document.getElementById('relevance-popup');
-  const relevanceParent = relevanceChevron?.closest('li');
+  // Relevance popup handler
+const relevanceChevron = document.getElementById('relevance-chevron');
+const relevancePopup = document.getElementById('relevance-popup');
+const relevanceButton = relevanceChevron?.closest('button');
 
-  if (relevanceChevron && relevancePopup && relevanceParent) {
-    relevanceParent.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isHidden = relevancePopup.classList.contains('hidden');
+if (relevanceButton && relevancePopup) {
+  relevanceButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isHidden = relevancePopup.classList.contains('hidden');
 
-      if (isHidden) {
-        closeAllPopups(relevancePopup);
-        relevancePopup.classList.remove('hidden');
-        relevanceChevron.classList.add('rotate-180');
-      } else {
-        relevancePopup.classList.add('hidden');
-        relevanceChevron.classList.remove('rotate-180');
-      }
-    });
-    relevancePopup.addEventListener('click', (e) => e.stopPropagation());
-  }
+    if (isHidden) {
+      closeAllPopups(relevancePopup);
+      relevancePopup.classList.remove('hidden');
+      relevanceChevron.classList.add('rotate-180');
+    } else {
+      relevancePopup.classList.add('hidden');
+      relevanceChevron.classList.remove('rotate-180');
+    }
+  });
+  relevancePopup.addEventListener('click', (e) => e.stopPropagation());
+}
 
   // nested filter button listeners
   nestedElements.forEach(element => {
