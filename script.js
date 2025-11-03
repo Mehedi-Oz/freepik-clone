@@ -342,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+
 // Close <details> elements when clicking outside
 document.addEventListener('click', function (e) {
   const details = document.querySelectorAll('details');
@@ -351,6 +352,7 @@ document.addEventListener('click', function (e) {
     }
   });
 });
+
 
 // Filter bar toggle
 const chevron = document.querySelector('.chevron');
@@ -528,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
     relevancePopup.classList.add('hidden');
   }
 });
+
 
 // Button group toggles
 document.querySelectorAll('.people-count-btn').forEach(btn => {
@@ -927,105 +930,54 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// Sidebar more options popup
+// Sidebar popup handler
 document.addEventListener('DOMContentLoaded', function () {
-  const moreOptionsBtn = document.getElementById('more-options-btn');
-  const moreOptionsPopup = document.getElementById('more-options-popup');
-  const collapsedFooterIcons = document.getElementById('collapsed-footer-icons');
-  const sidebarFooterIcons = document.querySelector('.sidebar-helper-icons');
   const sidebar = document.getElementById('logo-sidebar');
+  const sidebarFooterIcons = document.querySelector('.sidebar-helper-icons');
 
-  if (moreOptionsBtn && moreOptionsPopup) {
-    moreOptionsBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      moreOptionsPopup.classList.toggle('hidden');
+  const popupRegistry = new Set();
 
-      if (!moreOptionsPopup.classList.contains('hidden') && sidebar.classList.contains('w-16')) {
+  initPopupHandler({
+    buttonId: 'more-options-btn',
+    popupId: 'more-options-popup',
+    popupRegistry: popupRegistry,
+    onOpen: function () {
+      const collapsedFooterIcons = document.getElementById('collapsed-footer-icons');
+      if (sidebar?.classList.contains('w-16') && collapsedFooterIcons) {
         collapsedFooterIcons.classList.remove('hidden');
-      } else {
+      }
+    },
+    onClose: function () {
+      const collapsedFooterIcons = document.getElementById('collapsed-footer-icons');
+      if (collapsedFooterIcons) {
         collapsedFooterIcons.classList.add('hidden');
       }
-    });
-
-    document.addEventListener('click', function (e) {
-      if (!moreOptionsBtn.contains(e.target) && !moreOptionsPopup.contains(e.target)) {
-        moreOptionsPopup.classList.add('hidden');
-        collapsedFooterIcons.classList.add('hidden');
-      }
-    });
-
-    moreOptionsPopup.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', function () {
-        moreOptionsPopup.classList.add('hidden');
-        collapsedFooterIcons.classList.add('hidden');
-      });
-    });
-
-    const collapsedThemeBtn = collapsedFooterIcons?.querySelector('[title="Theme"]');
-    if (collapsedThemeBtn) {
-      const themePopup = document.createElement('div');
-      themePopup.className = 'absolute bottom-full mb-2 w-32 bg-gray-800 border border-gray-600 rounded shadow-lg z-50 text-white text-sm hidden';
-      themePopup.innerHTML = `
-        <ul class="py-1">
-          <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-            </svg>
-            Light
-          </li>
-          <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-            </svg>
-            Dark
-          </li>
-          <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
-            </svg>
-            System
-          </li>
-        </ul>
-      `;
-
-      const themeBtnWrapper = document.createElement('div');
-      themeBtnWrapper.className = 'relative';
-      collapsedThemeBtn.parentNode.insertBefore(themeBtnWrapper, collapsedThemeBtn);
-      themeBtnWrapper.appendChild(collapsedThemeBtn);
-      themeBtnWrapper.appendChild(themePopup);
-
-      collapsedThemeBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        themePopup.classList.toggle('hidden');
-      });
-
-      document.addEventListener('click', function (e) {
-        if (!themeBtnWrapper.contains(e.target)) {
-          themePopup.classList.add('hidden');
-        }
-      });
-
-      themePopup.querySelectorAll('li').forEach(item => {
-        item.addEventListener('click', function () {
-          console.log('Theme selected:', this.textContent.trim());
-          themePopup.classList.add('hidden');
-        });
-      });
     }
+  });
 
+  initPopupHandler({
+    buttonId: 'all-tools-btn',
+    popupId: 'all-tools-popup',
+    popupRegistry: popupRegistry
+  });
+
+  const collapsedFooterIcons = document.getElementById('collapsed-footer-icons');
+  const collapsedThemeBtn = collapsedFooterIcons?.querySelector('[title="Theme"]');
+
+  if (collapsedThemeBtn) {
+    setupThemePopup(collapsedThemeBtn);
+  }
+
+  if (sidebar && sidebarFooterIcons) {
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         if (mutation.attributeName === 'class') {
           const isCollapsed = sidebar.classList.contains('w-16');
           const helperIconsContainer = sidebarFooterIcons.querySelector('.flex > div');
-          if (isCollapsed) {
-            if (helperIconsContainer) {
-              helperIconsContainer.style.display = 'none';
-            }
-          } else {
-            if (helperIconsContainer) {
-              helperIconsContainer.style.display = 'flex';
-            }
+          if (helperIconsContainer) {
+            helperIconsContainer.style.display = isCollapsed ? 'none' : 'flex';
+          }
+          if (!isCollapsed && collapsedFooterIcons) {
             collapsedFooterIcons.classList.add('hidden');
           }
         }
@@ -1042,36 +994,120 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+// Popup handler function
+function initPopupHandler(config) {
+  const { buttonId, popupId, popupRegistry, onOpen, onClose } = config;
+  const button = document.getElementById(buttonId);
+  const popup = document.getElementById(popupId);
 
-// All Tools popup
-document.addEventListener('DOMContentLoaded', function () {
-  const allToolsBtn = document.getElementById('all-tools-btn');
-  const allToolsPopup = document.getElementById('all-tools-popup');
-  const allToolsListItem = allToolsBtn?.closest('li');
+  if (!button || !popup) return;
 
-  if (allToolsBtn && allToolsPopup && allToolsListItem) {
-    allToolsBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      allToolsPopup.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', function (e) {
-      if (!allToolsBtn.contains(e.target) && !allToolsPopup.contains(e.target)) {
-        allToolsPopup.classList.add('hidden');
-      }
-    });
-
-    allToolsPopup.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', function () {
-        allToolsPopup.classList.add('hidden');
+  function closeOtherPopups() {
+    if (popupRegistry) {
+      popupRegistry.forEach(otherPopup => {
+        if (otherPopup.element !== popup && !otherPopup.element.classList.contains('hidden')) {
+          otherPopup.element.classList.add('hidden');
+          if (otherPopup.onClose) {
+            otherPopup.onClose();
+          }
+        }
       });
-    });
+    }
+  }
 
-    allToolsPopup.addEventListener('click', function (e) {
-      e.stopPropagation();
+  if (popupRegistry) {
+    popupRegistry.add({
+      element: popup,
+      onClose: onClose
     });
   }
-});
+
+  button.addEventListener('click', function (e) {
+    e.stopPropagation();
+
+    const isCurrentlyHidden = popup.classList.contains('hidden');
+
+    closeOtherPopups();
+
+    if (isCurrentlyHidden) {
+      popup.classList.remove('hidden');
+      if (onOpen) onOpen();
+    } else {
+      popup.classList.add('hidden');
+      if (onClose) onClose();
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!button.contains(e.target) && !popup.contains(e.target)) {
+      popup.classList.add('hidden');
+      if (onClose) onClose();
+    }
+  });
+
+  popup.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function () {
+      popup.classList.add('hidden');
+      if (onClose) onClose();
+    });
+  });
+
+  popup.addEventListener('click', function (e) {
+    e.stopPropagation();
+  });
+}
+
+// Theme popup setup function
+function setupThemePopup(themeButton) {
+  const themePopup = document.createElement('div');
+  themePopup.className = 'absolute bottom-full mb-2 w-32 bg-gray-800 border border-gray-600 rounded shadow-lg z-50 text-white text-sm hidden';
+  themePopup.innerHTML = `
+    <ul class="py-1">
+      <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+        </svg>
+        Light
+      </li>
+      <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+        </svg>
+        Dark
+      </li>
+      <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+        </svg>
+        System
+      </li>
+    </ul>
+  `;
+
+  const themeBtnWrapper = document.createElement('div');
+  themeBtnWrapper.className = 'relative';
+  themeButton.parentNode.insertBefore(themeBtnWrapper, themeButton);
+  themeBtnWrapper.appendChild(themeButton);
+  themeBtnWrapper.appendChild(themePopup);
+
+  themeButton.addEventListener('click', function (e) {
+    e.stopPropagation();
+    themePopup.classList.toggle('hidden');
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!themeBtnWrapper.contains(e.target)) {
+      themePopup.classList.add('hidden');
+    }
+  });
+
+  themePopup.querySelectorAll('li').forEach(item => {
+    item.addEventListener('click', function () {
+      console.log('Theme selected:', this.textContent.trim());
+      themePopup.classList.add('hidden');
+    });
+  });
+}
 
 
 // Mobile more options popup
