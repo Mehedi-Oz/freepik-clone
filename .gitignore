@@ -1,0 +1,13 @@
+# Database configuration
+db.php
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Node modules (if applicable in future)
+node_modules/

@@ -80,19 +80,6 @@ input[type="search"]::-webkit-search-decoration {
   border-bottom-color: white;
 }
 
-/* "More" button hover and active effects */
-#more-btn {
-  position: relative;
-  padding-bottom: 8px;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease;
-}
-
-#more-btn:hover,
-#more-btn.active {
-  border-bottom-color: white;
-}
-
 /* Prevent body scrolling when modal is active */
 body.no-scroll {
   overflow: hidden;
@@ -155,4 +142,21 @@ body.no-scroll {
 #tags-scroll-left:hover,
 #tags-scroll-right:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Animation for Total Results update */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide {
+  animation: fadeSlideIn 0.5s ease-out forwards;
 }

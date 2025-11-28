@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "checkJs": false,
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "lib": ["ES6", "DOM", "DOM.Iterable"]
+  },
+  "include": ["*.js"],
+  "exclude": ["node_modules"]
+}
