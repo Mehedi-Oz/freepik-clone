@@ -9,5 +9,17 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Node modules (if applicable in future)
+# Node modules
 node_modules/
+
+# Build output (uncomment if you don't want to commit compiled CSS)
+# dist/
+
+# GitHub folder
+.github/
+
+# Backup and progress files
+todo-backup/
+
+# Cache folder
+cache/

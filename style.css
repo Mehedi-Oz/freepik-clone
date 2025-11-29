@@ -3,6 +3,33 @@
   display: none;
 }
 
+/* Column span utility for masonry layouts */
+.col-span-full {
+  column-span: all;
+}
+
+/* Lazy loading image styles */
+.lazy-image {
+  transition: opacity 0.3s ease-in-out;
+  background-color: #374151; /* gray-700 - matches skeleton */
+  min-height: 200px;
+}
+
+.lazy-image.loading {
+  opacity: 0.6;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+  background-color: transparent;
+}
+
+.lazy-image.error {
+  opacity: 0.5;
+  filter: grayscale(100%);
+  background-color: #4b5563; /* gray-600 */
+}
+
 /* Sidebar transition effects */
 #logo-sidebar {
   transition: width 0.3s ease-in-out;

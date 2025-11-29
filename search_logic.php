@@ -1,73 +1,190 @@
 <?php
 // Shared search and filter logic for both API and initial page load
+// Security: Uses prepared statements and input validation
 
+// Include configuration
+if (!defined('ENVIRONMENT')) {
+  include_once 'config.php';
+}
+
+// Include Repository and Service classes
+require_once 'classes/Repository.php';
+require_once 'classes/ImageRepository.php';
+require_once 'classes/ImageService.php';
+
+// Check if database connection is available
+if (!$dbcon) {
+  // Set default values to prevent errors
+  $slis = false;
+  $total = 0;
+  $totalPages = 1;
+  $page = 1;
+  $perpage = RESULTS_PER_PAGE;
+
+  // Log error
+  if (ENVIRONMENT === 'development') {
+    error_log("search_logic.php: Database connection not available");
+  }
+
+  // Exit early - don't process further
+  return;
+}
+
+// ============================================
+// INPUT VALIDATION AND SANITIZATION
+// ============================================
+
+// Search query validation
 $raw_q = isset($_GET['q']) ? trim($_GET['q']) : '';
 
 // Fix: .htaccess rewrites index.html to ?q=index.html
-// Treat as empty search to show homepage
 if ($raw_q === 'index.html' || $raw_q === 'index.php') {
   $raw_q = '';
 }
 
+// Sanitize search query (limit length, remove dangerous characters)
+$raw_q = mb_substr($raw_q, 0, 200); // Limit length
 $q = $raw_q ?: 'wallpaper'; // Default search term
+
+// Page validation with bounds checking
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$perpage = 20;
+$page = max(MIN_PAGE_NUMBER, min(MAX_PAGE_NUMBER, $page));
+$perpage = RESULTS_PER_PAGE;
 
+// ============================================
+// INITIALIZE REPOSITORY AND SERVICE
+// ============================================
+$imageRepository = new ImageRepository($dbcon);
+$imageService = new ImageService($imageRepository);
+
+// Prepare request parameters for service
+$requestParams = $_GET;
+if (!empty($raw_q)) {
+  $requestParams['search'] = $raw_q;
+}
+
+// Build filters using service
+$filters = $imageService->buildFilters($requestParams);
+
+// Get images using service (with caching)
+$result = $imageService->getImages($filters, $page, $perpage, $requestParams);
+
+// Extract results for backward compatibility
+// Handle both mysqli_result (from DB) and array (from cache)
+$slis = $result['results'];
+if (is_array($slis)) {
+  // Convert array back to mysqli_result-like object for compatibility
+  // Create a simple iterator that mimics mysqli_result behavior
+  $slis = new ArrayIterator($slis);
+} elseif (!($slis instanceof mysqli_result)) {
+  // Fallback: ensure we have something iterable
+  $slis = false;
+}
+$total = $result['total'];
+$totalPages = $result['totalPages'];
+$page = $result['page'];
+$perpage = $result['perPage'];
+
+// Legacy code below - keeping for reference but now using service pattern above
+// ============================================
+// OLD FILTER BUILDING CODE (DEPRECATED - Using Service now)
+// ============================================
+/*
+
+// Prepare search term for full-text search (sanitized)
 $pl = str_replace('-', ' ', $q); // SEO-friendly URLs: photo-editing → photo editing
-$pl = mysqli_real_escape_string($dbcon, $pl);
-$start = ($page - 1) * $perpage;
+// Remove potentially dangerous characters for FULLTEXT search
+$pl = preg_replace('/[^\w\s-]/u', '', $pl); // Allow only word chars, spaces, hyphens
+$pl = mb_substr($pl, 0, 100); // Limit length
 
-// AI-generated filter
+// ============================================
+// FILTER VALIDATION (Whitelist Approach)
+// ============================================
+
+// AI-generated filter with validation
 $ai_condition = "";
+$ai_condition_params = [];
+$ai_condition_types = "";
+
 if (isset($_GET['ai-type'])) {
   $aiType = $_GET['ai-type'];
-  if ($aiType == 'only_ai') {
-    $ai_condition = " AND UPPER(ai_gen) = 'YES' ";
-  } elseif ($aiType == 'exclude_ai') {
-    $ai_condition = " AND (UPPER(ai_gen) != 'YES' OR ai_gen IS NULL) ";
+  // Whitelist validation
+  if (in_array($aiType, ALLOWED_AI_TYPES)) {
+    if ($aiType == 'only_ai') {
+      $ai_condition = " AND UPPER(ai_gen) = 'YES' ";
+    } elseif ($aiType == 'exclude_ai') {
+      $ai_condition = " AND (UPPER(ai_gen) != 'YES' OR ai_gen IS NULL) ";
+    }
+    // 'show_all' requires no condition
   }
 }
 
-// File type filter (PNG/JPG)
+// File type filter with validation
 $filetype_condition = "";
+$filetype_condition_params = [];
+$filetype_condition_types = "";
+
 if (isset($_GET['filetype'])) {
   $filetype = $_GET['filetype'];
-  if ($filetype == '1') {
-    $filetype_condition = " AND scategory = 1 ";
-  } elseif ($filetype == '2') {
-    $filetype_condition = " AND scategory = 2 ";
+  // Whitelist validation
+  if (in_array($filetype, ALLOWED_FILE_TYPES)) {
+    if ($filetype == '1') {
+      $filetype_condition = " AND scategory = 1 ";
+    } elseif ($filetype == '2') {
+      $filetype_condition = " AND scategory = 2 ";
+    }
+    // 'all' requires no condition
   }
 }
 
-// Number of people in image
+// Number of people in image with validation
 $people_condition = "";
+$people_condition_params = [];
+$people_condition_types = "";
+
 if (isset($_GET['people'])) {
   $people = $_GET['people'];
-  if ($people == 'all') {
-    $people_condition = "";
-  } elseif ($people == 'No,0') {
-    $people_condition = " AND (human IN ('No', '0', 0) OR human IS NULL OR human = '') ";
-  } elseif ($people == '4+') {
-    $people_condition = " AND CAST(human AS UNSIGNED) >= 4 ";
-  } else {
-    $people_condition = " AND human = '" . mysqli_real_escape_string($dbcon, $people) . "' ";
+  // Whitelist validation
+  if (in_array($people, ALLOWED_PEOPLE_VALUES)) {
+    if ($people == 'all') {
+      $people_condition = "";
+    } elseif ($people == 'No,0') {
+      $people_condition = " AND (human IN ('No', '0', 0) OR human IS NULL OR human = '') ";
+    } elseif ($people == '4+') {
+      $people_condition = " AND CAST(human AS UNSIGNED) >= 4 ";
+    } else {
+      // Use prepared statement for numeric people values
+      $people_condition = " AND human = ? ";
+      $people_condition_params[] = $people;
+      $people_condition_types .= "s";
+    }
   }
 }
 
-// Image orientation (landscape/portrait/square)
+// Image orientation with validation
 $orientation_condition = "";
+$orientation_condition_params = [];
+$orientation_condition_types = "";
+
 if (isset($_GET['orientation'])) {
   $orientation = $_GET['orientation'];
-  if ($orientation != 'all' && $orientation != '') {
-    $orientation_condition = " AND orientation = '" . mysqli_real_escape_string($dbcon, $orientation) . "' ";
+  // Whitelist validation
+  if (in_array($orientation, ALLOWED_ORIENTATIONS) && $orientation != 'all') {
+    $orientation_condition = " AND orientation = ? ";
+    $orientation_condition_params[] = $orientation;
+    $orientation_condition_types .= "s";
   }
 }
 
-// Color filter using regex patterns
+// Color filter using regex patterns (whitelist approach)
 $color_condition = "";
+$color_condition_params = [];
+$color_condition_types = "";
+
 if (isset($_GET['color'])) {
   $color = $_GET['color'];
-  if ($color != 'all' && $color != '') {
+  // Whitelist validation - only allow predefined colors
+  if (in_array($color, ALLOWED_COLORS) && $color != 'all') {
     // Hex color patterns for matching dominant image colors
     $color_patterns = [
       'red' => '#(ff|ed|ea|e6|c0|bf|bb|ba|b9|bc|b8|ae|a0|99|98|90|87|80|7f|70|c1|c2|c8|c9|ca|d4|44|55)[0-9a-f]{4}',
@@ -87,26 +204,47 @@ if (isset($_GET['color'])) {
 
     if (isset($color_patterns[$color])) {
       $pattern = $color_patterns[$color];
-      $color_condition = " AND colorcode REGEXP '" . mysqli_real_escape_string($dbcon, $pattern) . "' ";
+      // Use prepared statement for REGEXP pattern
+      $color_condition = " AND colorcode REGEXP ? ";
+      $color_condition_params[] = $pattern;
+      $color_condition_types .= "s";
     }
   }
 }
 
-// License type filter
+// License type filter with validation
 $license_condition = "";
+$license_condition_params = [];
+$license_condition_types = "";
+
 if (isset($_GET['license'])) {
   $license = $_GET['license'];
-  if ($license != 'all' && $license != '') {
-    $license_condition = " AND license = '" . mysqli_real_escape_string($dbcon, $license) . "' ";
+  // Whitelist validation
+  if (in_array($license, ALLOWED_LICENSES) && $license != 'all') {
+    $license_condition = " AND license = ? ";
+    $license_condition_params[] = $license;
+    $license_condition_types .= "s";
   }
 }
 
+// ============================================
+// BUILD QUERY WITH PREPARED STATEMENTS
+// ============================================
+
 // Build search query with full-text search
-if ($raw_q !== '') {
+// Note: FULLTEXT search doesn't support prepared statements directly,
+// but we've sanitized $pl above to prevent injection
+$search_condition = "";
+$select_score_col = "";
+$order_by = "";
+
+if ($raw_q !== '' && !empty($pl)) {
+  // Sanitized search term - safe for interpolation after validation
+  $escaped_pl = mysqli_real_escape_string($dbcon, $pl);
   // Boolean mode: strict filtering
-  $match_clause_filter = "MATCH(title, keyword, photoname) AGAINST('$pl' IN BOOLEAN MODE)";
+  $match_clause_filter = "MATCH(title, keyword, photoname) AGAINST('$escaped_pl' IN BOOLEAN MODE)";
   // Natural language mode: relevance scoring
-  $match_clause_score = "MATCH(title, keyword, photoname) AGAINST('$pl' IN NATURAL LANGUAGE MODE)";
+  $match_clause_score = "MATCH(title, keyword, photoname) AGAINST('$escaped_pl' IN NATURAL LANGUAGE MODE)";
 
   $search_condition = " AND $match_clause_filter ";
   $select_score_col = ", $match_clause_score as relevance_score";
@@ -118,28 +256,82 @@ if ($raw_q !== '') {
   $order_by = "ORDER BY id DESC";
 }
 
-// Add pagination logic
-if (isset($_GET['page'])) {
-  $page = max(1, (int)$_GET['page']); // Ensure page is at least 1
+// Combine all condition parameters
+$all_params = array_merge(
+  $people_condition_params,
+  $orientation_condition_params,
+  $color_condition_params,
+  $license_condition_params
+);
+$all_types = $people_condition_types . $orientation_condition_types . $color_condition_types . $license_condition_types;
+
+// Add pagination parameters
+$all_params[] = $start;
+$all_params[] = $perpage;
+$all_types .= "ii";
+
+// Build base WHERE clause
+$where_clause = "status = 'ACTIVE'";
+$where_clause .= $search_condition;
+$where_clause .= $ai_condition;
+$where_clause .= $filetype_condition;
+$where_clause .= $people_condition;
+$where_clause .= $orientation_condition;
+$where_clause .= $color_condition;
+$where_clause .= $license_condition;
+
+// ============================================
+// COUNT QUERY (for pagination)
+// ============================================
+
+// Build count query with placeholders
+$countSql = "SELECT COUNT(*) AS total_rows FROM shajal_photo_posts WHERE $where_clause";
+
+// Prepare count query parameters (without pagination)
+$count_params = array_merge(
+  $people_condition_params,
+  $orientation_condition_params,
+  $color_condition_params,
+  $license_condition_params
+);
+$count_types = $people_condition_types . $orientation_condition_types . $color_condition_types . $license_condition_types;
+
+// Use prepared statement for count query if we have parameters
+if (!empty($count_params) && !empty($count_types)) {
+  $countStmt = $dbcon->prepare($countSql);
+  if ($countStmt) {
+    $countStmt->bind_param($count_types, ...$count_params);
+    if ($countStmt->execute()) {
+      $countResult = $countStmt->get_result();
+      $totalRow = $countResult->fetch_assoc();
+      $total = $totalRow ? (int)$totalRow['total_rows'] : 0;
+    } else {
+      $total = 0;
+      if (ENVIRONMENT === 'development') {
+        error_log("Count query execution failed: " . $countStmt->error);
+      }
+    }
+    $countStmt->close();
+  } else {
+    // Fallback to regular query if prepare fails
+    if (ENVIRONMENT === 'development') {
+      error_log("Count query prepare failed: " . mysqli_error($dbcon));
+    }
+    $countQuery = mysqli_query($dbcon, $countSql);
+    $total = $countQuery ? (int)mysqli_fetch_assoc($countQuery)['total_rows'] : 0;
+  }
 } else {
-  $page = 1;
-}
-$perpage = 20; // Number of results per page
-$start = ($page - 1) * $perpage;
-
-// Debugging: Log page parameter and offset calculation
-error_log("Page parameter: " . $page);
-error_log("Calculated start: " . $start);
-
-// Update total count query for pagination
-$countSql = "SELECT COUNT(*) AS total_rows FROM shajal_photo_posts WHERE status = 'ACTIVE' $search_condition $ai_condition $filetype_condition $people_condition $orientation_condition $color_condition $license_condition";
-$countQuery = mysqli_query($dbcon, $countSql);
-
-if (!$countQuery) {
-  $total = 0;
-} else {
-  $totalRow = mysqli_fetch_assoc($countQuery);
-  $total = $totalRow['total_rows'];
+  // No parameters, use regular query
+  $countQuery = mysqli_query($dbcon, $countSql);
+  if (!$countQuery) {
+    $total = 0;
+    if (ENVIRONMENT === 'development') {
+      error_log("Count query failed: " . mysqli_error($dbcon));
+    }
+  } else {
+    $totalRow = mysqli_fetch_assoc($countQuery);
+    $total = $totalRow ? (int)$totalRow['total_rows'] : 0;
+  }
 }
 
 // Calculate total pages and validate current page
@@ -149,22 +341,55 @@ $totalPages = max(1, ceil($total / $perpage));
 if ($page > $totalPages) {
   $page = $totalPages;
   $start = ($page - 1) * $perpage;
+  // Update pagination params
+  $all_params[count($all_params) - 2] = $start;
 }
 
-// Fetch image results with applied filters
-$sql = "
-  SELECT id, title, view_thumb_img $select_score_col
-  FROM shajal_photo_posts
-  WHERE status = 'ACTIVE' $search_condition $ai_condition $filetype_condition $people_condition $orientation_condition $color_condition $license_condition
-  $order_by
-  LIMIT $start, $perpage
-";
+// ============================================
+// MAIN QUERY (with prepared statements)
+// ============================================
 
-error_log("SQL Query: " . $sql);
-$slis = mysqli_query($dbcon, $sql);
+$sql = "SELECT id, title, view_thumb_img $select_score_col
+        FROM shajal_photo_posts
+        WHERE $where_clause
+        $order_by
+        LIMIT ?, ?";
 
-if (!$slis) {
-  error_log("SQL Error: " . mysqli_error($dbcon));
+// Use prepared statement
+$stmt = $dbcon->prepare($sql);
+
+if ($stmt) {
+  // Bind all parameters including pagination
+  if (!empty($all_params)) {
+    $stmt->bind_param($all_types, ...$all_params);
+  }
+
+  if ($stmt->execute()) {
+    $slis = $stmt->get_result();
+
+    // Log only in development
+    if (ENVIRONMENT === 'development') {
+      error_log("Query executed successfully. Results: " . ($slis ? $slis->num_rows : 0));
+    }
+  } else {
+    $slis = false;
+    if (ENVIRONMENT === 'development') {
+      error_log("Query execution failed: " . $stmt->error);
+    }
+  }
+  // Note: Don't close $stmt here - it's used by calling code
 } else {
-  error_log("Results fetched successfully.");
+  // Fallback to regular query if prepare fails (shouldn't happen with proper SQL)
+  if (ENVIRONMENT === 'development') {
+    error_log("Prepare failed: " . mysqli_error($dbcon));
+    error_log("SQL: " . $sql);
+  }
+
+  // Fallback - but this should be avoided
+  $slis = mysqli_query($dbcon, $sql);
+
+  if (!$slis && ENVIRONMENT === 'development') {
+    error_log("Fallback query failed: " . mysqli_error($dbcon));
+  }
 }
+*/

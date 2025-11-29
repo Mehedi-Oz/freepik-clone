@@ -1,3 +1,70 @@
+// =============================================
+// CONSTANTS
+// =============================================
+const BREAKPOINTS = {
+  MOBILE: 640,
+  TABLET: 768,
+  DESKTOP: 1280
+};
+
+const PAGINATION = {
+  ITEMS_PER_PAGE: 20,
+  MAX_PAGES: 1000
+};
+
+// =============================================
+// GLOBAL ERROR HANDLING
+// =============================================
+window.addEventListener('error', function (event) {
+  console.error('Global error:', event.error);
+  if (ENVIRONMENT === 'development') {
+    console.error('Error details:', {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      error: event.error
+    });
+  }
+  // Prevent default error handling
+  return false;
+});
+
+window.addEventListener('unhandledrejection', function (event) {
+  console.error('Unhandled promise rejection:', event.reason);
+  if (ENVIRONMENT === 'development') {
+    console.error('Rejection details:', event.reason);
+  }
+});
+
+// Safe event handler wrapper
+function safeEventHandler(handler) {
+  return function (...args) {
+    try {
+      return handler.apply(this, args);
+    } catch (error) {
+      console.error('Error in event handler:', error);
+      if (ENVIRONMENT === 'development') {
+        console.error('Handler error details:', {
+          error: error.message,
+          stack: error.stack,
+          args: args
+        });
+      }
+    }
+  };
+}
+
+// =============================================
+// UTILITY FUNCTIONS
+// =============================================
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // Performance: Debounce utility
 function debounce(func, wait) {
   let timeout;
@@ -11,9 +78,217 @@ function debounce(func, wait) {
   };
 }
 
-// Sidebar collapse/expand
+// =============================================
+// DOM ELEMENT CACHE
+// =============================================
+// Cache frequently accessed DOM elements
+const elements = {
+  // Will be populated on DOMContentLoaded
+  sidebar: null,
+  sidebarTexts: null,
+  sidebarMenuLinks: null,
+  sidebarMenuSvgs: null,
+  sidebarLogoImg: null,
+  sidebarSignin: null,
+  sidebarHelperIcons: null,
+  imageGallery: null,
+  tagsContainer: null,
+  // ... more elements cached as needed
+};
+
+// Function to refresh cached elements (call after DOM updates)
+function refreshElementCache() {
+  elements.sidebar = document.getElementById('logo-sidebar');
+  elements.sidebarTexts = document.querySelectorAll('.sidebar-text');
+  elements.sidebarMenuLinks = document.querySelectorAll('#logo-sidebar .sidebar-menu a');
+  elements.sidebarMenuSvgs = document.querySelectorAll('#logo-sidebar .sidebar-menu svg');
+  elements.sidebarLogoImg = document.getElementById('sidebar-logo-img');
+  elements.sidebarSignin = document.querySelector('.sidebar-signin');
+  elements.sidebarHelperIcons = document.querySelector('.sidebar-helper-icons .flex');
+  elements.imageGallery = document.getElementById('image-gallery');
+  elements.tagsContainer = document.getElementById('tags-container');
+}
+
+// =============================================
+// CONSOLIDATED INITIALIZATION
+// =============================================
+// Single DOMContentLoaded listener that initializes all components
 document.addEventListener('DOMContentLoaded', function () {
-  const sidebar = document.getElementById('logo-sidebar');
+  // Cache DOM elements first
+  refreshElementCache();
+
+  // Initialize all components in order
+  initializeSidebar();
+  initializeSearchBar();
+  initializeDesktopFilters();
+  initializeMobileSidebar();
+  initializeMobileFilters();
+  initializeMobileFilterPopups();
+  initializeThemeSwitcher();
+  initializeSearchTags();
+  initializeSidebarFooter();
+  initializeMobileAllTools();
+  initializeFilterHandlers();
+  initializeImageLazyLoading();
+});
+
+// =============================================
+// IMAGE LAZY LOADING WITH INTERSECTION OBSERVER
+// =============================================
+function initializeImageLazyLoading() {
+  // Function to load an image directly
+  function loadImageDirectly(img) {
+    if (!img.dataset.src) return;
+
+    const src = img.dataset.src;
+    img.src = src;
+    img.removeAttribute('data-src');
+    img.classList.add('loaded');
+  }
+
+  // Function to load an image with preload check
+  function loadImage(img) {
+    if (!img.dataset.src) return;
+    if (img.src && img.src !== img.dataset.src && !img.src.includes('data:image/svg')) {
+      // Already loaded
+      return;
+    }
+
+    const imageLoader = new Image();
+    imageLoader.onload = function() {
+      img.src = img.dataset.src;
+      img.classList.remove('loading');
+      img.classList.add('loaded');
+      img.removeAttribute('data-src');
+    };
+    imageLoader.onerror = function() {
+      console.error('Failed to load image:', img.dataset.src);
+      img.classList.add('error');
+      img.classList.remove('loading');
+    };
+    img.classList.add('loading');
+    imageLoader.src = img.dataset.src;
+  }
+
+  // Function to check if image is in viewport
+  function isInViewport(img) {
+    const rect = img.getBoundingClientRect();
+    return rect.top < window.innerHeight + 200 &&
+           rect.bottom > -200 &&
+           rect.left < window.innerWidth + 200 &&
+           rect.right > -200;
+  }
+
+  // Load all images that are already in viewport immediately
+  function loadVisibleImages() {
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      if (isInViewport(img)) {
+        loadImageDirectly(img);
+      }
+    });
+  }
+
+  // Initial load of visible images
+  loadVisibleImages();
+
+  // Fallback: If images don't load after 500ms, load them all directly
+  setTimeout(() => {
+    const remainingImages = document.querySelectorAll('img[data-src]');
+    if (remainingImages.length > 0) {
+      remainingImages.forEach(img => {
+        loadImageDirectly(img);
+      });
+    }
+  }, 500);
+
+  // Check if Intersection Observer is supported
+  if (!('IntersectionObserver' in window)) {
+    // Fallback: Load all remaining images after a short delay
+    setTimeout(() => {
+      document.querySelectorAll('img[data-src]').forEach(img => {
+        loadImageDirectly(img);
+      });
+    }, 100);
+    return;
+  }
+
+  // Create Intersection Observer with options
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        if (img.dataset.src) {
+          loadImageDirectly(img);
+          observer.unobserve(img);
+        }
+      }
+    });
+  }, {
+    rootMargin: '200px', // Start loading 200px before image enters viewport
+    threshold: 0.01
+  });
+
+  // Store observer globally so it can be reused
+  window.imageObserver = imageObserver;
+
+  // Observe all remaining lazy images
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    imageObserver.observe(img);
+    img.classList.add('observed');
+  });
+
+  // Also check again after a short delay (in case layout changed)
+  setTimeout(loadVisibleImages, 100);
+}
+
+// Function to observe new images (called after AJAX updates)
+function observeLazyImages() {
+  function isInViewport(img) {
+    const rect = img.getBoundingClientRect();
+    return rect.top < window.innerHeight + 200 &&
+           rect.bottom > -200 &&
+           rect.left < window.innerWidth + 200 &&
+           rect.right > -200;
+  }
+
+  function loadImageDirectly(img) {
+    if (!img.dataset.src) return;
+    const src = img.dataset.src;
+    img.src = src;
+    img.removeAttribute('data-src');
+    img.classList.add('loaded');
+  }
+
+  if (!window.imageObserver) {
+    // Fallback: if observer not available, load all images directly
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      loadImageDirectly(img);
+    });
+    return;
+  }
+
+  // Load visible images immediately, observe the rest
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    if (!img.classList.contains('observed')) {
+      if (isInViewport(img)) {
+        // Already visible, load immediately
+        loadImageDirectly(img);
+      } else {
+        // Observe for later
+        window.imageObserver.observe(img);
+        img.classList.add('observed');
+      }
+    }
+  });
+}
+
+// =============================================
+// INITIALIZATION FUNCTIONS
+// =============================================
+
+// Sidebar collapse/expand
+function initializeSidebar() {
+  const sidebar = elements.sidebar || document.getElementById('logo-sidebar');
   const collapseBtn = document.getElementById('sidebar-collapse-btn');
   const mainContent = document.querySelector('.ml-64');
   const sidebarLogo = document.querySelector('.sidebar-logo');
@@ -25,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function handleResize() {
     const screenWidth = window.innerWidth;
 
-    if (screenWidth < 1280) {
+    if (screenWidth < BREAKPOINTS.DESKTOP) {
       // Mobile view: hide collapse button, sidebar is always hidden on mobile
       if (collapseBtn) {
         collapseBtn.style.display = 'none';
@@ -34,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // On mobile, sidebar is hidden (display: none via CSS max-sm:hidden)
       // Don't manipulate classes here to avoid conflicts
 
-    } else if (screenWidth >= 1280) {
+    } else if (screenWidth >= BREAKPOINTS.DESKTOP) {
       // Desktop view: show collapse button and apply user preference
       if (collapseBtn) {
         collapseBtn.style.display = 'block';
@@ -59,21 +334,32 @@ document.addEventListener('DOMContentLoaded', function () {
     mainContent.classList.add('ml-16');
     sidebarLogo.classList.remove('justify-between');
     sidebarLogo.classList.add('justify-center');
-    document.querySelectorAll('.sidebar-text').forEach(text => {
-      text.classList.add('hidden');
-    });
-    document.getElementById('sidebar-logo-img').classList.add('hidden');
+    // Use cached elements
+    if (elements.sidebarTexts) {
+      elements.sidebarTexts.forEach(text => {
+        text.classList.add('hidden');
+      });
+    }
+    if (elements.sidebarLogoImg) {
+      elements.sidebarLogoImg.classList.add('hidden');
+    }
     sidebarDivider.classList.remove('mx');
     sidebarDivider.classList.add('mx-2');
-    document.querySelector('.sidebar-signin').classList.add('hidden');
+    if (elements.sidebarSignin) {
+      elements.sidebarSignin.classList.add('hidden');
+    }
 
-    document.querySelectorAll('#logo-sidebar .sidebar-menu a').forEach(link => {
-      link.classList.remove('p-2');
-      link.classList.add('p-1', 'justify-center');
-    });
-    document.querySelectorAll('#logo-sidebar .sidebar-menu svg').forEach(svg => {
-      svg.classList.add('m-1');
-    });
+    if (elements.sidebarMenuLinks) {
+      elements.sidebarMenuLinks.forEach(link => {
+        link.classList.remove('p-2');
+        link.classList.add('p-1', 'justify-center');
+      });
+    }
+    if (elements.sidebarMenuSvgs) {
+      elements.sidebarMenuSvgs.forEach(svg => {
+        svg.classList.add('m-1');
+      });
+    }
 
     const helperIcons = document.querySelector('.sidebar-helper-icons .flex');
     helperIcons.classList.remove('justify-between');
@@ -105,22 +391,33 @@ document.addEventListener('DOMContentLoaded', function () {
     sidebarLogo.classList.add('justify-between');
     sidebarLogo.classList.remove('justify-center');
     setTimeout(() => {
-      document.querySelectorAll('.sidebar-text').forEach(text => {
-        text.classList.remove('hidden');
-      });
-      document.getElementById('sidebar-logo-img').classList.remove('hidden');
-      document.querySelector('.sidebar-signin').classList.remove('hidden');
+      // Use cached elements
+      if (elements.sidebarTexts) {
+        elements.sidebarTexts.forEach(text => {
+          text.classList.remove('hidden');
+        });
+      }
+      if (elements.sidebarLogoImg) {
+        elements.sidebarLogoImg.classList.remove('hidden');
+      }
+      if (elements.sidebarSignin) {
+        elements.sidebarSignin.classList.remove('hidden');
+      }
     }, 150);
     sidebarDivider.classList.add('mx');
     sidebarDivider.classList.remove('mx-2');
 
-    document.querySelectorAll('#logo-sidebar .sidebar-menu a').forEach(link => {
-      link.classList.add('p-2');
-      link.classList.remove('p-1', 'justify-center');
-    });
-    document.querySelectorAll('#logo-sidebar .sidebar-menu svg').forEach(svg => {
-      svg.classList.remove('m-1');
-    });
+    if (elements.sidebarMenuLinks) {
+      elements.sidebarMenuLinks.forEach(link => {
+        link.classList.add('p-2');
+        link.classList.remove('p-1', 'justify-center');
+      });
+    }
+    if (elements.sidebarMenuSvgs) {
+      elements.sidebarMenuSvgs.forEach(svg => {
+        svg.classList.remove('m-1');
+      });
+    }
 
     const helperIcons = document.querySelector('.sidebar-helper-icons .flex');
     helperIcons.classList.add('justify-between');
@@ -149,11 +446,11 @@ document.addEventListener('DOMContentLoaded', function () {
       applySidebarExpand();
     }
   });
-});
+}
 
 
 // Search bar clear button
-document.addEventListener('DOMContentLoaded', function () {
+function initializeSearchBar() {
   const searchInput = document.querySelector('input[type="search"]');
   const clearIcon = document.querySelector('.absolute.right-20');
 
@@ -175,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     toggleClearButton();
   }
-});
+}
 
 
 // Close <details> elements when clicking outside
@@ -199,7 +496,7 @@ let isDown = localStorage.getItem('filterDropdownOpen') === 'true';
 
 // Function to check if we're on desktop
 function isDesktopView() {
-  return window.innerWidth >= 640; // sm breakpoint in Tailwind
+  return window.innerWidth >= BREAKPOINTS.MOBILE; // sm breakpoint in Tailwind
 }
 
 // Apply cached state on page load (only on desktop)
@@ -253,7 +550,7 @@ window.addEventListener('resize', debounce(() => {
 
 
 // Desktop filter popups
-document.addEventListener('DOMContentLoaded', () => {
+function initializeDesktopFilters() {
   const filterElements = [
     { btn: 'license-btn', popup: 'license-popup', chevron: 'license-chevron' },
     { btn: 'ai-btn', popup: 'ai-popup', chevron: 'ai-chevron' },
@@ -379,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (relevancePopup) {
     relevancePopup.classList.add('hidden');
   }
-});
+}
 
 
 // Button group toggles
@@ -394,7 +691,7 @@ document.querySelectorAll('.people-count-btn').forEach(btn => {
 
 
 // Mobile sidebar
-document.addEventListener('DOMContentLoaded', function () {
+function initializeMobileSidebar() {
   const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
   const mobileSidebar = document.getElementById('mobile-sidebar');
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -419,11 +716,11 @@ document.addEventListener('DOMContentLoaded', function () {
       document.body.classList.remove('overflow-hidden');
     }
   });
-});
+}
 
 
 // Mobile filter overlay and All Images dropdown
-document.addEventListener('DOMContentLoaded', function () {
+function initializeMobileFilters() {
   const mobileFiltersBtn = document.getElementById('mobile-filters-btn');
   const mobileFilterOverlay = document.getElementById('mobile-filter-overlay');
   const closeFilterOverlayBtn = document.getElementById('close-filter-overlay');
@@ -510,11 +807,11 @@ document.addEventListener('DOMContentLoaded', function () {
       mobileAllImagesChevron?.classList.remove('rotate-180');
     }
   });
-});
+}
 
 
 // Mobile filter popups
-document.addEventListener('DOMContentLoaded', function () {
+function initializeMobileFilterPopups() {
   const mobileFilterElements = [
     { btn: 'mobile-license-btn', popup: 'mobile-license-popup' },
     { btn: 'mobile-ai-btn', popup: 'mobile-ai-popup' },
@@ -542,15 +839,14 @@ document.addEventListener('DOMContentLoaded', function () {
       popup.addEventListener('click', (e) => e.stopPropagation());
     }
   });
-});
+}
 
 
 
 
 
 // Image card overlays
-document.addEventListener('DOMContentLoaded', function () {
-
+function initializeImageCards() {
   const icons = {
     download: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -592,72 +888,199 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
   }
 
-  function initializeImageCards() {
-    const imageCards = document.querySelectorAll('.image-card');
-
-    imageCards.forEach(card => {
-      card.innerHTML += createImageOverlay();
-
-      const downloadBtn = card.querySelector('.download-btn');
-      const editBtn = card.querySelector('.edit-btn');
-      const saveBtn = card.querySelector('.save-btn');
-      const discoverBtn = card.querySelector('.discover-btn');
-
-      const imageId = card.dataset.image;
-      const imageAlt = card.querySelector('img').alt;
-
-      downloadBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleImageAction('download', imageId, imageAlt);
-      });
-
-      editBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleImageAction('edit', imageId, imageAlt);
-      });
-
-      saveBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleImageAction('save', imageId, imageAlt);
-      });
-
-      discoverBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleImageAction('discover', imageId, imageAlt);
-      });
-    });
-  }
-
-  function handleImageAction(action, imageId, imageAlt) {
-    switch (action) {
-      case 'download':
-        downloadImage(imageId);
-        break;
-
-      case 'edit':
-        openImageEditor(imageId);
-        break;
-
-      case 'save':
-        saveToCollection(imageId);
-        showNotification('Image saved to collection!');
-        break;
-
-      case 'discover':
-        findSimilarImages(imageId);
-        break;
-
-      default:
-      // Unknown action
+  // Image action functions
+  function downloadImage(imageId) {
+    try {
+      const imageCard = document.querySelector(`[data-image="${imageId}"]`);
+      const imgElement = imageCard?.querySelector('img');
+      if (imgElement && imgElement.src) {
+        const link = document.createElement('a');
+        link.href = imgElement.src;
+        link.download = imgElement.alt || `image-${imageId}`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showNotification('Download started', 'success');
+      } else {
+        showNotification('Image not found', 'error');
+      }
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      showNotification('Failed to download image', 'error');
     }
   }
 
-  initializeImageCards();
-});
+  function openImageEditor(imageId) {
+    try {
+      const imageCard = document.querySelector(`[data-image="${imageId}"]`);
+      const imgElement = imageCard?.querySelector('img');
+      if (imgElement && imgElement.src) {
+        // Open image in new window/tab for editing
+        window.open(imgElement.src, '_blank');
+        showNotification('Opening image editor...', 'info');
+      } else {
+        showNotification('Image not found', 'error');
+      }
+    } catch (error) {
+      console.error('Error opening image editor:', error);
+      showNotification('Failed to open image editor', 'error');
+    }
+  }
+
+  function saveToCollection(imageId) {
+    try {
+      // Save to localStorage as a simple collection
+      const collections = JSON.parse(localStorage.getItem('imageCollections') || '[]');
+      if (!collections.includes(imageId)) {
+        collections.push(imageId);
+        localStorage.setItem('imageCollections', JSON.stringify(collections));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error saving to collection:', error);
+      return false;
+    }
+  }
+
+  function findSimilarImages(imageId) {
+    try {
+      const imageCard = document.querySelector(`[data-image="${imageId}"]`);
+      const imgElement = imageCard?.querySelector('img');
+      if (imgElement && imgElement.alt) {
+        // Use the image alt text as search query
+        const searchInput = document.querySelector('input[type="search"]');
+        if (searchInput) {
+          searchInput.value = imgElement.alt;
+          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+          // Trigger search
+          const searchForm = searchInput.closest('form') || document.querySelector('form');
+          if (searchForm) {
+            searchForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+          }
+        }
+        showNotification('Searching for similar images...', 'info');
+      } else {
+        showNotification('Image information not available', 'error');
+      }
+    } catch (error) {
+      console.error('Error finding similar images:', error);
+      showNotification('Failed to find similar images', 'error');
+    }
+  }
+
+  function showNotification(message, type = 'info') {
+    try {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full`;
+
+      // Set colors based on type
+      const colors = {
+        success: 'bg-green-600 text-white',
+        error: 'bg-red-600 text-white',
+        info: 'bg-blue-600 text-white',
+        warning: 'bg-yellow-600 text-white'
+      };
+
+      notification.className += ' ' + (colors[type] || colors.info);
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      // Animate in
+      requestAnimationFrame(() => {
+        notification.classList.remove('translate-x-full');
+      });
+
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 3000);
+    } catch (error) {
+      console.error('Error showing notification:', error);
+      // Fallback to console
+      console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+  }
+
+  function handleImageAction(action, imageId, imageAlt) {
+    try {
+      switch (action) {
+        case 'download':
+          downloadImage(imageId);
+          break;
+
+        case 'edit':
+          openImageEditor(imageId);
+          break;
+
+        case 'save':
+          const saved = saveToCollection(imageId);
+          if (saved) {
+            showNotification('Image saved to collection!', 'success');
+          } else {
+            showNotification('Image already in collection', 'info');
+          }
+          break;
+
+        case 'discover':
+          findSimilarImages(imageId);
+          break;
+
+        default:
+          console.warn('Unknown image action:', action);
+      }
+    } catch (error) {
+      console.error('Error handling image action:', error);
+      showNotification('An error occurred. Please try again.', 'error');
+    }
+  }
+
+  const imageCards = document.querySelectorAll('.image-card');
+
+  imageCards.forEach(card => {
+    card.innerHTML += createImageOverlay();
+
+    const downloadBtn = card.querySelector('.download-btn');
+    const editBtn = card.querySelector('.edit-btn');
+    const saveBtn = card.querySelector('.save-btn');
+    const discoverBtn = card.querySelector('.discover-btn');
+
+    const imageId = card.dataset.image;
+    const imageAlt = card.querySelector('img').alt;
+
+    downloadBtn?.addEventListener('click', safeEventHandler((e) => {
+      e.preventDefault();
+      handleImageAction('download', imageId, imageAlt);
+    }));
+
+    editBtn?.addEventListener('click', safeEventHandler((e) => {
+      e.preventDefault();
+      handleImageAction('edit', imageId, imageAlt);
+    }));
+
+    saveBtn?.addEventListener('click', safeEventHandler((e) => {
+      e.preventDefault();
+      handleImageAction('save', imageId, imageAlt);
+    }));
+
+    discoverBtn?.addEventListener('click', safeEventHandler((e) => {
+      e.preventDefault();
+      handleImageAction('discover', imageId, imageAlt);
+    }));
+  });
+}
 
 
 // Search tags with arrow controls
-document.addEventListener('DOMContentLoaded', function () {
+function initializeSearchTags() {
   const searchInput = document.querySelector('input[type="search"]');
   const searchTags = document.querySelectorAll('.overflow-x-auto ul li');
   const tagsContainer = document.getElementById('tags-container');
@@ -719,11 +1142,11 @@ document.addEventListener('DOMContentLoaded', function () {
     updateArrows();
     window.addEventListener('resize', debounce(updateArrows, 250));
   }
-});
+}
 
 
 // Sidebar popup handler
-document.addEventListener('DOMContentLoaded', function () {
+function initializeSidebarFooter() {
   const sidebar = document.getElementById('logo-sidebar');
   const sidebarFooterIcons = document.querySelector('.sidebar-helper-icons');
 
@@ -784,7 +1207,7 @@ document.addEventListener('DOMContentLoaded', function () {
       helperIconsContainer.style.display = 'none';
     }
   }
-});
+}
 
 // Popup handler function
 function initPopupHandler(config) {
@@ -905,7 +1328,7 @@ function setupThemePopup(themeButton) {
 
 
 // Mobile All Tools page
-document.addEventListener('DOMContentLoaded', function () {
+function initializeMobileAllTools() {
   const mobileAllToolsBtn = document.querySelector('#mobile-sidebar ul:nth-of-type(2) li:nth-child(4) a');
   const mobileAllToolsPage = document.getElementById('mobile-all-tools-page');
   const mobileAllToolsBack = document.getElementById('mobile-all-tools-back');
@@ -943,10 +1366,10 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-});
+}
 
-// Filter AJAX handlers - wrapped in DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function () {
+// Filter AJAX handlers
+function initializeFilterHandlers() {
 
   // Helper function to highlight filter button when non-default option is selected
   function updateFilterButtonHighlight(buttonId, isActive) {
@@ -958,6 +1381,61 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.style.backgroundColor = '';
       }
     }
+  }
+
+  // =============================================
+  // UNIFIED FILTER HANDLER
+  // =============================================
+  /**
+   * Unified filter handler for desktop and mobile filters
+   * @param {string} filterName - Filter parameter name (e.g., 'ai-type', 'filetype', 'orientation', 'license')
+   * @param {string} defaultValue - Default value that removes the filter (e.g., 'show_all', 'all')
+   * @param {string} buttonId - ID of the filter button to highlight
+   * @param {string} popupId - ID of the popup to close after selection
+   * @param {boolean} autoApply - Whether to auto-apply (desktop) or just close popup (mobile)
+   * @param {boolean} resetPage - Whether to reset page to 1 when filter changes
+   */
+  function createFilterHandler(filterName, defaultValue, buttonId, popupId, autoApply = true, resetPage = true) {
+    return function (radio) {
+      radio.addEventListener('change', function () {
+        if (autoApply) {
+          // Desktop: Auto-apply filter
+          const urlParams = new URLSearchParams(window.location.search);
+
+          if (resetPage) {
+            urlParams.delete('page');
+          }
+
+          if (this.value === defaultValue) {
+            urlParams.delete(filterName);
+          } else {
+            urlParams.set(filterName, this.value);
+          }
+
+          // Update URL without reloading
+          const newUrl = window.location.pathname + '?' + urlParams.toString();
+          window.history.pushState({}, '', newUrl);
+
+          // Load images via AJAX immediately
+          loadImagesAjax(urlParams);
+
+          // Highlight button if non-default option selected
+          const isActive = this.value !== defaultValue;
+          updateFilterButtonHighlight(buttonId, isActive);
+
+          // Cache filter state
+          saveFiltersToCache();
+        } else {
+          // Mobile: Just close popup, filters applied via Apply button
+        }
+
+        // Close the popup after selection
+        const popup = document.getElementById(popupId);
+        if (popup) {
+          popup.classList.add('hidden');
+        }
+      });
+    };
   }
 
   // =============================================
@@ -1345,189 +1823,37 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  // Auto-apply AI filter when radio button is clicked
-  document.querySelectorAll('input[name="ai-type"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (this.value === 'show_all') {
-        urlParams.delete("ai-type");
-      } else {
-        urlParams.set("ai-type", this.value);
-      }
+  // Unified filter handlers - Desktop (auto-apply) and Mobile (close popup only)
+  document.querySelectorAll('input[name="ai-type"]').forEach(
+    createFilterHandler('ai-type', 'show_all', 'ai-btn', 'ai-popup', true, false)
+  );
+  document.querySelectorAll('input[name="mobile-ai-type"]').forEach(
+    createFilterHandler('ai-type', 'show_all', 'ai-btn', 'mobile-ai-popup', false, false)
+  );
 
-      // Update URL without reloading
-      const newUrl = window.location.pathname + '?' + urlParams.toString();
-      window.history.pushState({}, '', newUrl);
+  // File Type filter handlers
+  document.querySelectorAll('input[name="filetype"]').forEach(
+    createFilterHandler('filetype', 'all', 'filetype-btn', 'filetype-popup', true, true)
+  );
+  document.querySelectorAll('input[name="mobile-filetype"]').forEach(
+    createFilterHandler('filetype', 'all', 'filetype-btn', 'mobile-filetype-popup', false, false)
+  );
 
-      // Load images via AJAX immediately
-      loadImagesAjax(urlParams);
+  // Orientation filter handlers
+  document.querySelectorAll('input[name="orientation"]').forEach(
+    createFilterHandler('orientation', 'all', 'orientation-btn', 'orientation-popup', true, true)
+  );
+  document.querySelectorAll('input[name="mobile-orientation"]').forEach(
+    createFilterHandler('orientation', 'all', 'orientation-btn', 'mobile-orientation-popup', false, false)
+  );
 
-      // Highlight button if non-default option selected
-      const isActive = this.value !== 'show_all';
-      updateFilterButtonHighlight('ai-btn', isActive);
-
-      // Cache filter state
-      saveFiltersToCache();
-
-      // Close the popup after selection
-      const aiPopup = document.getElementById('ai-popup');
-      if (aiPopup) {
-        aiPopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply Mobile AI filter when radio button is clicked (REMOVED - now using Apply button)
-  document.querySelectorAll('input[name="mobile-ai-type"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      // Just close the popup - filters will be applied when "Apply Filters" is clicked
-      const mobileAiPopup = document.getElementById('mobile-ai-popup');
-      if (mobileAiPopup) {
-        mobileAiPopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply File Type filter when radio button is clicked
-  document.querySelectorAll('input[name="filetype"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // Reset page to 1 when filters change
-      urlParams.delete('page');
-
-      if (this.value === 'all') {
-        urlParams.delete("filetype");
-      } else {
-        urlParams.set("filetype", this.value);
-      }
-
-      // Update URL without reloading
-      const newUrl = window.location.pathname + '?' + urlParams.toString();
-      window.history.pushState({}, '', newUrl);
-
-      // Load images via AJAX immediately
-      loadImagesAjax(urlParams);
-
-      // Highlight button if non-default option selected
-      const isActive = this.value !== 'all';
-      updateFilterButtonHighlight('filetype-btn', isActive);
-
-      // Cache filter state
-      saveFiltersToCache();
-
-      // Close the popup after selection
-      const filetypePopup = document.getElementById('filetype-popup');
-      if (filetypePopup) {
-        filetypePopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply Mobile File Type filter when radio button is clicked (REMOVED - now using Apply button)
-  document.querySelectorAll('input[name="mobile-filetype"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      // Just close the popup - filters will be applied when "Apply Filters" is clicked
-      const mobileFiletypePopup = document.getElementById('mobile-filetype-popup');
-      if (mobileFiletypePopup) {
-        mobileFiletypePopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply Orientation filter when radio button is clicked (desktop)
-  document.querySelectorAll('input[name="orientation"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // Reset page to 1 when filters change
-      urlParams.delete('page');
-
-      if (this.value === 'all') {
-        urlParams.delete("orientation");
-      } else {
-        urlParams.set("orientation", this.value);
-      }
-
-      // Update URL without reloading
-      const newUrl = window.location.pathname + '?' + urlParams.toString();
-      window.history.pushState({}, '', newUrl);
-
-      // Load images via AJAX immediately
-      loadImagesAjax(urlParams);
-
-      // Highlight button if non-default option selected
-      const isActive = this.value !== 'all';
-      updateFilterButtonHighlight('orientation-btn', isActive);
-
-      // Cache filter state
-      saveFiltersToCache();
-
-      // Close the popup after selection
-      const orientationPopup = document.getElementById('orientation-popup');
-      if (orientationPopup) {
-        orientationPopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply Mobile Orientation filter when radio button is clicked (REMOVED - now using Apply button)
-  document.querySelectorAll('input[name="mobile-orientation"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      // Just close the popup - filters will be applied when "Apply Filters" is clicked
-      const mobileOrientationPopup = document.getElementById('mobile-orientation-popup');
-      if (mobileOrientationPopup) {
-        mobileOrientationPopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply License filter when radio button is clicked (desktop)
-  document.querySelectorAll('input[name="license"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // Reset page to 1 when filters change
-      urlParams.delete('page');
-
-      if (this.value === 'all') {
-        urlParams.delete("license");
-      } else {
-        urlParams.set("license", this.value);
-      }
-
-      // Update URL without reloading
-      const newUrl = window.location.pathname + '?' + urlParams.toString();
-      window.history.pushState({}, '', newUrl);
-
-      // Load images via AJAX immediately
-      loadImagesAjax(urlParams);
-
-      // Highlight button if non-default option selected
-      const isActive = this.value !== 'all';
-      updateFilterButtonHighlight('license-btn', isActive);
-
-      // Cache filter state
-      saveFiltersToCache();
-
-      // Close the popup after selection
-      const licensePopup = document.getElementById('license-popup');
-      if (licensePopup) {
-        licensePopup.classList.add('hidden');
-      }
-    });
-  });
-
-  // Auto-apply Mobile License filter when radio button is clicked (REMOVED - now using Apply button)
-  document.querySelectorAll('input[name="mobile-license"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      // Just close the popup - filters will be applied when "Apply Filters" is clicked
-      const mobileLicensePopup = document.getElementById('mobile-license-popup');
-      if (mobileLicensePopup) {
-        mobileLicensePopup.classList.add('hidden');
-      }
-    });
-  });
+  // License filter handlers
+  document.querySelectorAll('input[name="license"]').forEach(
+    createFilterHandler('license', 'all', 'license-btn', 'license-popup', true, true)
+  );
+  document.querySelectorAll('input[name="mobile-license"]').forEach(
+    createFilterHandler('license', 'all', 'license-btn', 'mobile-license-popup', false, false)
+  );
 
   // Add event listener for color filter buttons (desktop and mobile)
   document.querySelectorAll('[data-color]').forEach(button => {
@@ -1778,7 +2104,7 @@ document.addEventListener('DOMContentLoaded', function () {
       window.location.href = url.toString();
     });
   }
-}); // End of DOMContentLoaded for filter handlers
+} // End of initializeFilterHandlers
 
 // Function to update pagination controls based on new results
 function updatePaginationControls(currentPage, totalPages, totalResults) {
@@ -1862,22 +2188,28 @@ function loadImagesAjax(urlParams) {
   const imageGallery = document.getElementById('image-gallery');
   const totalResults = document.querySelector('.tag p');
 
-  // Show skeleton loading animation
+  // Show skeleton loading animation (optimized with requestAnimationFrame)
   if (imageGallery) {
-    const skeletonCards = Array(12).fill(0).map((_, i) => {
-      // Vary heights for visual interest (simulating masonry)
-      const heights = ['h-48', 'h-64', 'h-56', 'h-72', 'h-52', 'h-60'];
-      const height = heights[i % heights.length];
-      return `
-        <div class="skeleton-card mb-4">
-          <div class="bg-gray-700 rounded-lg ${height} w-full relative overflow-hidden animate-pulse">
-            <div class="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 skeleton-shimmer"></div>
+    // Use requestAnimationFrame to avoid blocking main thread
+    requestAnimationFrame(() => {
+      const skeletonCards = Array(12).fill(0).map((_, i) => {
+        // Vary heights for visual interest (simulating masonry)
+        const heights = ['h-48', 'h-64', 'h-56', 'h-72', 'h-52', 'h-60'];
+        const height = heights[i % heights.length];
+        return `
+          <div class="skeleton-card mb-4">
+            <div class="bg-gray-700 rounded-lg ${height} w-full relative overflow-hidden animate-pulse">
+              <div class="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 skeleton-shimmer"></div>
+            </div>
           </div>
-        </div>
-      `;
-    }).join('');
+        `;
+      }).join('');
 
-    imageGallery.innerHTML = skeletonCards;
+      // Update DOM in next frame for smooth rendering
+      requestAnimationFrame(() => {
+        imageGallery.innerHTML = skeletonCards;
+      });
+    });
 
     // Add shimmer animation style if not exists
     if (!document.getElementById('skeleton-style')) {
@@ -1927,12 +2259,16 @@ function loadImagesAjax(urlParams) {
       if (data.error) {
         console.error('Server error:', data.error);
         if (imageGallery) {
-          imageGallery.innerHTML = '<div class="w-full text-center text-white py-20 text-lg" style="column-span: all;">Server error: ' + data.error + '</div>';
+          imageGallery.innerHTML = '<div class="w-full text-center text-white py-20 text-lg col-span-full">Server error: ' + escapeHtml(data.error) + '</div>';
         }
         return;
       }
       if (imageGallery) {
         imageGallery.innerHTML = data.html;
+        // Re-observe lazy images after AJAX update
+        setTimeout(() => {
+          observeLazyImages();
+        }, 50);
       }
       if (totalResults) {
         totalResults.textContent = data.total + ' results';
@@ -1967,7 +2303,7 @@ function loadImagesAjax(urlParams) {
     .catch(error => {
       console.error('Error loading images:', error);
       if (imageGallery) {
-        imageGallery.innerHTML = '<div class="w-full text-center text-white py-20 text-lg" style="column-span: all;">Error: ' + error.message + '</div>';
+        imageGallery.innerHTML = '<div class="w-full text-center text-white py-20 text-lg col-span-full">Error: ' + escapeHtml(error.message) + '</div>';
       }
     });
 }
