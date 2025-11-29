@@ -7,7 +7,7 @@
     <!-- Logo and the collapse button -->
     <div class="sidebar-logo flex items-center justify-between mb-6">
       <a href="https://www.pixahunt.com/">
-        <img id="sidebar-logo-img" class="w-[130px]" src="assets/logo/freepik-logo.png" alt="freepik-logo">
+        <img id="sidebar-logo-img" class="w-[130px]" src="<?php echo BASE_PATH; ?>/assets/logo/freepik-logo.png" alt="freepik-logo">
       </a>
       <div id="sidebar-collapse-btn"
         class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer">

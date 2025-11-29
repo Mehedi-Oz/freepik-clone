@@ -1,5 +1,5 @@
-# Database configuration
-db.php
+# Database configuration (contains credentials)
+database/db.php
 
 # System files
 .DS_Store
@@ -15,7 +15,7 @@ node_modules/
 # Build output (uncomment if you don't want to commit compiled CSS)
 # dist/
 
-# GitHub folder
+# GitHub folder (Copilot instructions)
 .github/
 
 # Backup and progress files

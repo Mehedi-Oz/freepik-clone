@@ -31,7 +31,16 @@ class Cache
           self::$enabled = 'apcu';
         } else {
           // APCu exists but is disabled, fallback to file-based cache
-          self::$cacheDir = __DIR__ . '/../cache';
+          // Prefer explicit app config or env var, otherwise use system temp
+          if (defined('CACHE_DIR') && constant('CACHE_DIR')) {
+            self::$cacheDir = rtrim(constant('CACHE_DIR'), "\\/");
+          } elseif (getenv('FREEPIK_CACHE_DIR')) {
+            self::$cacheDir = rtrim(getenv('FREEPIK_CACHE_DIR'), "\\/");
+          } else {
+            // Place cache under system temp to avoid writing into repo
+            self::$cacheDir = rtrim(sys_get_temp_dir(), "\\/") . DIRECTORY_SEPARATOR . 'freepik-clone-cache';
+          }
+
           if (!is_dir(self::$cacheDir)) {
             @mkdir(self::$cacheDir, 0755, true);
           }
@@ -39,7 +48,15 @@ class Cache
         }
       } else {
         // Fallback to file-based cache
-        self::$cacheDir = __DIR__ . '/../cache';
+        // Prefer explicit app config or env var, otherwise use system temp
+        if (defined('CACHE_DIR') && constant('CACHE_DIR')) {
+          self::$cacheDir = rtrim(constant('CACHE_DIR'), "\\/");
+        } elseif (getenv('FREEPIK_CACHE_DIR')) {
+          self::$cacheDir = rtrim(getenv('FREEPIK_CACHE_DIR'), "\\/");
+        } else {
+          self::$cacheDir = rtrim(sys_get_temp_dir(), "\\/") . DIRECTORY_SEPARATOR . 'freepik-clone-cache';
+        }
+
         if (!is_dir(self::$cacheDir)) {
           @mkdir(self::$cacheDir, 0755, true);
         }
@@ -67,7 +84,7 @@ class Cache
       return $cached !== false ? $cached : false;
     } else {
       // File-based cache
-      $file = self::$cacheDir . '/' . md5($key) . '.cache';
+      $file = self::$cacheDir . DIRECTORY_SEPARATOR . md5($key) . '.cache';
       if (!file_exists($file)) {
         return false;
       }
@@ -106,7 +123,7 @@ class Cache
       return $apcuStoreFunc($key, $value, $ttl);
     } else {
       // File-based cache
-      $file = self::$cacheDir . '/' . md5($key) . '.cache';
+      $file = self::$cacheDir . DIRECTORY_SEPARATOR . md5($key) . '.cache';
       $data = [
         'value' => $value,
         'expires' => time() + $ttl
@@ -131,7 +148,7 @@ class Cache
       $apcuDeleteFunc = 'apcu_delete';
       return $apcuDeleteFunc($key);
     } else {
-      $file = self::$cacheDir . '/' . md5($key) . '.cache';
+      $file = self::$cacheDir . DIRECTORY_SEPARATOR . md5($key) . '.cache';
       return @unlink($file);
     }
   }
@@ -151,7 +168,7 @@ class Cache
       $apcuClearFunc = 'apcu_clear_cache';
       return $apcuClearFunc();
     } else {
-      $files = glob(self::$cacheDir . '/*.cache');
+      $files = glob(self::$cacheDir . DIRECTORY_SEPARATOR . '*.cache');
       foreach ($files as $file) {
         @unlink($file);
       }

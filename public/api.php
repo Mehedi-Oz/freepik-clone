@@ -4,7 +4,7 @@ ob_start();
 
 // Include configuration
 if (!defined('ENVIRONMENT')) {
-  include_once 'config.php';
+  include_once '../config/config.php';
 }
 
 // JSON response with 5-minute cache
@@ -17,7 +17,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 });
 
 try {
-  include 'db.php';
+  include '../database/db.php';
 
   if (!$dbcon) {
     // Don't expose database connection details
@@ -30,7 +30,7 @@ try {
   }
 
   // Execute shared search logic
-  include 'search_logic.php';
+  include '../src/api/search_logic.php';
 
   if (!$slis) {
     // Don't expose SQL errors in production

@@ -1,14 +1,21 @@
 # php -- BEGIN cPanel-generated handler, do not edit
-# Set the “ea-php80” package as the default “PHP” programming language.
+# Set the "ea-php80" package as the default "PHP" programming language.
 <IfModule mime_module>
   AddHandler application/x-httpd-ea-php80 .php .php8 .phtml
 </IfModule>
 
+# Set the default index file
+DirectoryIndex public/index.php index.php index.html
+
+# Enable URL rewriting
 RewriteEngine On
+
+# If the request is for a real file or directory, serve it directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-# This passes the path to index.php as ?q=
-RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
+# Route all other requests to public/index.php
+RewriteRule ^(.*)$ public/index.php?q=$1 [L,QSA]
 # php -- END cPanel-generated handler, do not edit
 
 # ----------------------------------------------------------------------

@@ -4,13 +4,13 @@
   "description": "Pixahunt - Premium Stock Photo Discovery Platform",
   "scripts": {
     "build": "npm run build-css && npm run build-js",
-    "build-css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
-    "build-js": "esbuild script.js --bundle --minify --outfile=dist/script.min.js --sourcemap",
+    "build-css": "tailwindcss -i ./src/css/input.css -o ./dist/output.css --minify",
+    "build-js": "esbuild src/js/script.js --bundle --minify --outfile=dist/script.min.js --sourcemap",
     "build-prod": "npm run build && npm run optimize-assets",
     "optimize-assets": "echo 'Asset optimization: Ensure gzip/brotli compression is enabled on server'",
     "watch": "npm run watch-css & npm run watch-js",
-    "watch-css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
-    "watch-js": "esbuild script.js --bundle --watch --outfile=dist/script.min.js --sourcemap"
+    "watch-css": "tailwindcss -i ./src/css/input.css -o ./dist/output.css --watch",
+    "watch-js": "esbuild src/js/script.js --bundle --watch --outfile=dist/script.min.js --sourcemap"
   },
   "devDependencies": {
     "esbuild": "^0.19.0",

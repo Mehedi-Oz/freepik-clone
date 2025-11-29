@@ -7,10 +7,10 @@
   <title><?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?></title>
 
   <!-- Tailwind CSS (Production Build) -->
-  <link rel="stylesheet" href="dist/output.css">
+  <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/dist/output.css">
 
   <!-- all links -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/src/css/style.css">
 
   <script>
     (function() {
@@ -57,24 +57,28 @@
         // Filter bar logic
         var isFilterOpen = localStorage.getItem('filterDropdownOpen') === 'true';
         if (!isFilterOpen) {
-           var filterStyle = document.createElement('style');
-           filterStyle.id = 'filter-fouc-style';
-           filterStyle.innerHTML = `
+          var filterStyle = document.createElement('style');
+          filterStyle.id = 'filter-fouc-style';
+          filterStyle.innerHTML = `
              #filters-section { display: none !important; }
            `;
-           document.head.appendChild(filterStyle);
+          document.head.appendChild(filterStyle);
         } else {
-           var filterStyle = document.createElement('style');
-           filterStyle.id = 'filter-fouc-style';
-           filterStyle.innerHTML = `
+          var filterStyle = document.createElement('style');
+          filterStyle.id = 'filter-fouc-style';
+          filterStyle.innerHTML = `
              .chevron { transform: rotate(180deg) !important; transform-origin: center !important; }
            `;
-           document.head.appendChild(filterStyle);
+          document.head.appendChild(filterStyle);
         }
       } catch (e) {}
     })();
   </script>
+
+  <!-- Set base path for JavaScript -->
+  <script>
+    window.BASE_PATH = '<?php echo BASE_PATH; ?>';
+    window.API_URL = '<?php echo BASE_PATH; ?>/public/api.php';
+    window.ENVIRONMENT = '<?php echo ENVIRONMENT; ?>';
+  </script>
 </head>
-
-<body class="">
-

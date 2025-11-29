@@ -3,7 +3,7 @@
 
       <!-- Freepik logo -->
       <div class="mb-8 text-center lg:text-left">
-        <a href="https://www.pixahunt.com/"><img class="w-[130px] mx-auto lg:mx-0" src="assets/logo/freepik-logo.png" alt="freepik-logo"></a>
+        <a href="https://www.pixahunt.com/"><img class="w-[130px] mx-auto lg:mx-0" src="<?php echo BASE_PATH; ?>/assets/logo/freepik-logo.png" alt="freepik-logo"></a>
       </div>
 
       <!-- Desktop: 4-column grid -->
@@ -96,22 +96,22 @@
               </svg>
             </div>
       </div>
-  </div>
+      </div>
 
-  <!-- Language selector for mobile -->
-  <div class="text-center bg-gray-800">
-    <select class="bg-gray-800 border border-gray-600 rounded px-5 py-2 text-white text-sm mb-2">
-      <option>English</option>
-      <option>বাংলা</option>
-      <option>Español</option>
-      <option>Français</option>
-    </select>
-  </div>
+      <!-- Language selector for mobile -->
+      <div class="text-center bg-gray-800">
+        <select class="bg-gray-800 border border-gray-600 rounded px-5 py-2 text-white text-sm mb-2">
+          <option>English</option>
+          <option>বাংলা</option>
+          <option>Español</option>
+          <option>Français</option>
+        </select>
+      </div>
 
-  <!-- Copyright -->
-  <div class="text-center text-gray-500 text-xs bg-gray-800 pb-2">
-    Copyright © 2010–2025 Freepik Company S.L. All rights reserved.
-  </div>
+      <!-- Copyright -->
+      <div class="text-center text-gray-500 text-xs bg-gray-800 pb-2">
+        Copyright © 2010–2025 Freepik Company S.L. All rights reserved.
+      </div>
 
-</div>
-</footer>
+      </div>
+    </footer>

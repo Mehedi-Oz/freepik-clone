@@ -12,6 +12,9 @@ const PAGINATION = {
   MAX_PAGES: 1000
 };
 
+// Environment from PHP (default to production)
+const ENVIRONMENT = window.ENVIRONMENT || 'production';
+
 // =============================================
 // GLOBAL ERROR HANDLING
 // =============================================
@@ -124,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeMobileSidebar();
   initializeMobileFilters();
   initializeMobileFilterPopups();
-  initializeThemeSwitcher();
   initializeSearchTags();
   initializeSidebarFooter();
   initializeMobileAllTools();
@@ -155,13 +157,13 @@ function initializeImageLazyLoading() {
     }
 
     const imageLoader = new Image();
-    imageLoader.onload = function() {
+    imageLoader.onload = function () {
       img.src = img.dataset.src;
       img.classList.remove('loading');
       img.classList.add('loaded');
       img.removeAttribute('data-src');
     };
-    imageLoader.onerror = function() {
+    imageLoader.onerror = function () {
       console.error('Failed to load image:', img.dataset.src);
       img.classList.add('error');
       img.classList.remove('loading');
@@ -174,9 +176,9 @@ function initializeImageLazyLoading() {
   function isInViewport(img) {
     const rect = img.getBoundingClientRect();
     return rect.top < window.innerHeight + 200 &&
-           rect.bottom > -200 &&
-           rect.left < window.innerWidth + 200 &&
-           rect.right > -200;
+      rect.bottom > -200 &&
+      rect.left < window.innerWidth + 200 &&
+      rect.right > -200;
   }
 
   // Load all images that are already in viewport immediately
@@ -246,9 +248,9 @@ function observeLazyImages() {
   function isInViewport(img) {
     const rect = img.getBoundingClientRect();
     return rect.top < window.innerHeight + 200 &&
-           rect.bottom > -200 &&
-           rect.left < window.innerWidth + 200 &&
-           rect.right > -200;
+      rect.bottom > -200 &&
+      rect.left < window.innerWidth + 200 &&
+      rect.right > -200;
   }
 
   function loadImageDirectly(img) {
@@ -2239,7 +2241,8 @@ function loadImagesAjax(urlParams) {
 
   // Make AJAX request with cache busting
   const cacheBuster = '&_t=' + new Date().getTime();
-  const requestUrl = 'api.php?' + urlParams.toString() + cacheBuster;
+  const apiUrl = window.API_URL || 'api.php';
+  const requestUrl = apiUrl + '?' + urlParams.toString() + cacheBuster;
 
   fetch(requestUrl)
     .then(response => {

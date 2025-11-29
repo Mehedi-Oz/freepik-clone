@@ -15,7 +15,7 @@
         </button>
 
         <!-- Logo -->
-        <a href="https://www.pixahunt.com/"><img class="w-[130px] flex-shrink-0 hidden" src="assets/logo/freepik-logo.png" alt="freepik-logo"></a>
+        <a href="https://www.pixahunt.com/"><img class="w-[130px] flex-shrink-0 hidden" src="<?php echo BASE_PATH; ?>/assets/logo/freepik-logo.png" alt="freepik-logo"></a>
 
 
         <!-- Sign-in button-->

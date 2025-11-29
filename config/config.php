@@ -3,6 +3,9 @@
 // Define environment: 'development' or 'production'
 define('ENVIRONMENT', getenv('APP_ENV') ?: 'production');
 
+// Base URL path (change to '' for root domain, '/freepik-clone' for subfolder)
+define('BASE_PATH', '/freepik-clone');
+
 // Error reporting based on environment
 if (ENVIRONMENT === 'development') {
   error_reporting(E_ALL);
