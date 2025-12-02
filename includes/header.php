@@ -554,15 +554,27 @@
             class="absolute top-full left-0 mt-2 bg-gray-900 border border-gray-700 rounded z-50 text-white p-4 w-60 hidden">
             <label class="flex items-center mb-2 rounded px-4 py-2 hover:bg-gray-600">
               All
-              <input type="radio" name="ai-type" value="show_all" class=" ml-auto" <?php echo (!isset($_GET["ai-type"]) || $_GET["ai-type"] == "show_all" ? "checked" : ""); ?>>
+              <input type="radio" name="ai-type" value="show_all" class=" ml-auto" <?php echo !isset(
+                $_GET['ai-type'],
+              ) || $_GET['ai-type'] == 'show_all'
+                ? 'checked'
+                : ''; ?>>
             </label>
             <label class="flex items-center mb-2 rounded px-4 py-2 hover:bg-gray-600">
               Exclude AI-generated
-              <input type="radio" name="ai-type" value="exclude_ai" class=" ml-auto" <?php echo (isset($_GET["ai-type"]) && $_GET["ai-type"] == "exclude_ai" ? "checked" : ""); ?>>
+              <input type="radio" name="ai-type" value="exclude_ai" class=" ml-auto" <?php echo isset(
+                $_GET['ai-type'],
+              ) && $_GET['ai-type'] == 'exclude_ai'
+                ? 'checked'
+                : ''; ?>>
             </label>
             <label class="flex items-center rounded px-4 py-2 hover:bg-gray-600">
               Only AI-generated
-              <input type="radio" name="ai-type" value="only_ai" class=" ml-auto" <?php echo (isset($_GET["ai-type"]) && $_GET["ai-type"] == "only_ai" ? "checked" : ""); ?>>
+              <input type="radio" name="ai-type" value="only_ai" class=" ml-auto" <?php echo isset(
+                $_GET['ai-type'],
+              ) && $_GET['ai-type'] == 'only_ai'
+                ? 'checked'
+                : ''; ?>>
             </label>
           </div>
         </div>
@@ -705,15 +717,27 @@
             class="absolute top-full left-0 mt-2 bg-gray-900 border border-gray-700 rounded z-50 text-white p-4 w-40 hidden">
             <label class="flex items-center mb-2 rounded px-4 py-2 hover:bg-gray-600 cursor-pointer">
               All
-              <input type="radio" name="filetype" value="all" class="ml-auto" <?php echo (!isset($_GET["filetype"]) || $_GET["filetype"] == "all" ? "checked" : ""); ?>>
+              <input type="radio" name="filetype" value="all" class="ml-auto" <?php echo !isset(
+                $_GET['filetype'],
+              ) || $_GET['filetype'] == 'all'
+                ? 'checked'
+                : ''; ?>>
             </label>
             <label class="flex items-center mb-2 rounded px-4 py-2 hover:bg-gray-600 cursor-pointer">
               PNG
-              <input type="radio" name="filetype" value="1" class="ml-auto" <?php echo (isset($_GET["filetype"]) && $_GET["filetype"] == "1" ? "checked" : ""); ?>>
+              <input type="radio" name="filetype" value="1" class="ml-auto" <?php echo isset(
+                $_GET['filetype'],
+              ) && $_GET['filetype'] == '1'
+                ? 'checked'
+                : ''; ?>>
             </label>
             <label class="flex items-center rounded px-4 py-2 hover:bg-gray-600 cursor-pointer">
               JPG
-              <input type="radio" name="filetype" value="2" class="ml-auto" <?php echo (isset($_GET["filetype"]) && $_GET["filetype"] == "2" ? "checked" : ""); ?>>
+              <input type="radio" name="filetype" value="2" class="ml-auto" <?php echo isset(
+                $_GET['filetype'],
+              ) && $_GET['filetype'] == '2'
+                ? 'checked'
+                : ''; ?>>
             </label>
           </div>
         </div>

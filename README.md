@@ -9,12 +9,14 @@ Pixahunt is a modern, responsive stock photo discovery platform built as a high-
 ## ✨ Key Features
 
 ### 🎨 Modern User Interface
+
 - **Responsive Design**: Fully adaptive layout that works flawlessly on Desktops, Tablets, and Mobile devices.
 - **Masonry Grid**: Pinterest-style image gallery layout for an immersive viewing experience.
 - **Skeleton Loading**: Smooth loading states with shimmer effects for better perceived performance.
 - **Dark/Light Mode**: UI prepared for theme switching (System/Light/Dark).
 
 ### 🔍 Advanced Search & Filtering
+
 - **Real-time Search**: Instant search capabilities with keyword highlighting.
 - **Smart Filters**:
   - **AI Generation**: Filter by AI-generated or Human-made content.
@@ -26,11 +28,13 @@ Pixahunt is a modern, responsive stock photo discovery platform built as a high-
 - **State Persistence**: Filters and sidebar preferences are saved in `localStorage` and URL parameters for shareable links.
 
 ### 📱 Mobile Experience
+
 - **Touch-Optimized**: Custom mobile navigation and sidebar.
 - **Full-Screen Filter Overlay**: Dedicated mobile interface for complex filtering.
 - **Gesture Support**: Smooth transitions and interactions.
 
 ### ⚡ Performance
+
 - **AJAX Loading**: Seamless content updates without page reloads.
 - **Lazy Loading**: Images load only when they come into the viewport.
 - **Debounced Events**: Optimized resize and scroll handlers for smooth 60fps performance.
@@ -52,10 +56,12 @@ Pixahunt is a modern, responsive stock photo discovery platform built as a high-
 Since this project uses PHP and MySQL, it requires a local server environment like XAMPP, WAMP, or MAMP.
 
 ### 1. Prerequisites
+
 - Install [XAMPP](https://www.apachefriends.org/index.html) (or equivalent).
 - Ensure Apache and MySQL services are running.
 
 ### 2. Clone the Repository
+
 Navigate to your `htdocs` directory (usually `C:\xampp\htdocs`) and clone the project:
 
 ```bash
@@ -65,6 +71,7 @@ git clone https://github.com/yourusername/pixahunt.git
 ```
 
 ### 3. Database Setup
+
 1. Open **phpMyAdmin** (`http://localhost/phpmyadmin`).
 2. Create a new database named `pixahunt_db` (or check `db.php` for the configured name).
 3. Import the provided SQL file (if available) or create the `shajal_photo_posts` table with the following structure:
@@ -79,17 +86,42 @@ git clone https://github.com/yourusername/pixahunt.git
    - `status` (VARCHAR) - 'ACTIVE'
 
 ### 4. Configure Connection
+
 Check `db.php` to ensure credentials match your local setup:
+
 ```php
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbname = "pixahunt_db"; // Update this if different
+$dbhost = 'localhost';
+$dbuser = 'root';
+$dbpass = '';
+$dbname = 'pixahunt_db'; // Update this if different
 ```
 
 ### 5. Run the Project
+
 Open your browser and visit:
 `http://localhost/Pixahunt`
+
+## Build & Pipeline
+
+Prerequisites:
+
+- Node.js (v16+ recommended)
+- Optional: `cwebp` (from libwebp) on PATH to enable automatic WebP conversion. Without it the build will copy assets to `dist/assets/` unchanged.
+
+Local build steps:
+
+```powershell
+npm ci
+npm run build       # builds CSS and JS
+npm run optimize-assets   # converts/copies images into dist/assets
+npm run hash-assets  # generates dist/asset-manifest.json with hashed names
+# Or run full production build:
+npm run build-prod
+```
+
+CI:
+
+- There is a GitHub Actions workflow in `.github/workflows/ci.yml` that runs `npm ci` and `npm run build-prod` on pushes/PRs to `main` and uploads `dist/` as an artifact.
 
 ## 📂 Project Structure
 

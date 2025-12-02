@@ -26,7 +26,7 @@ class Repository
 
     if (!$stmt) {
       if (ENVIRONMENT === 'development') {
-        error_log("Repository: Prepare failed - " . mysqli_error($this->dbcon));
+        error_log('Repository: Prepare failed - ' . mysqli_error($this->dbcon));
       }
       return false;
     }
@@ -37,7 +37,7 @@ class Repository
 
     if (!$stmt->execute()) {
       if (ENVIRONMENT === 'development') {
-        error_log("Repository: Execute failed - " . $stmt->error);
+        error_log('Repository: Execute failed - ' . $stmt->error);
       }
       $stmt->close();
       return false;
@@ -72,13 +72,13 @@ class Repository
 
     if (!$result) {
       if (ENVIRONMENT === 'development') {
-        error_log("Repository: Count query failed - " . mysqli_error($this->dbcon));
+        error_log('Repository: Count query failed - ' . mysqli_error($this->dbcon));
       }
       return 0;
     }
 
     $row = mysqli_fetch_assoc($result);
-    return $row ? (int)$row['total_rows'] : 0;
+    return $row ? (int) $row['total_rows'] : 0;
   }
 
   /**

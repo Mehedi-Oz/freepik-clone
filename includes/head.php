@@ -6,8 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?></title>
 
+  <?php
+  include_once __DIR__ . '/../src/helpers/asset.php'; ?>
+
   <!-- Tailwind CSS (Production Build) -->
-  <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/dist/output.css">
+  <link rel="stylesheet" href="<?php echo asset_url('output.css'); ?>">
 
   <!-- all links -->
   <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/src/css/style.css">

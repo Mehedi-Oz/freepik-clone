@@ -4,16 +4,29 @@
   "description": "Pixahunt - Premium Stock Photo Discovery Platform",
   "scripts": {
     "build": "npm run build-css && npm run build-js",
-    "build-css": "tailwindcss -i ./src/css/input.css -o ./dist/output.css --minify",
+    "build-css": "cross-env NODE_ENV=production postcss src/css/input.css -o dist/output.css --verbose",
     "build-js": "esbuild src/js/script.js --bundle --minify --outfile=dist/script.min.js --sourcemap",
-    "build-prod": "npm run build && npm run optimize-assets",
-    "optimize-assets": "echo 'Asset optimization: Ensure gzip/brotli compression is enabled on server'",
+    "build-prod": "npm run build && npm run optimize-assets && npm run hash-assets",
+    "optimize-assets": "node scripts/optimize-assets.js",
+    "hash-assets": "node scripts/hash-assets.js",
     "watch": "npm run watch-css & npm run watch-js",
-    "watch-css": "tailwindcss -i ./src/css/input.css -o ./dist/output.css --watch",
-    "watch-js": "esbuild src/js/script.js --bundle --watch --outfile=dist/script.min.js --sourcemap"
+    "watch-css": "postcss src/css/input.css -o dist/output.css --watch --verbose",
+    "watch-js": "esbuild src/js/script.js --bundle --watch --outfile=dist/script.min.js --sourcemap",
+    "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\"",
+    "format": "prettier --write \"**/*.{js,json,md,php,html}\""
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@prettier/plugin-php": "^0.24.0",
+    "autoprefixer": "^10.4.22",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.19.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.5.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "prettier": "^3.7.2",
     "tailwindcss": "^3.4.1"
   }
 }

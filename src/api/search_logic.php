@@ -23,7 +23,7 @@ if (!$dbcon) {
 
   // Log error
   if (ENVIRONMENT === 'development') {
-    error_log("search_logic.php: Database connection not available");
+    error_log('search_logic.php: Database connection not available');
   }
 
   // Exit early - don't process further
@@ -47,7 +47,7 @@ $raw_q = mb_substr($raw_q, 0, 200); // Limit length
 $q = $raw_q ?: 'wallpaper'; // Default search term
 
 // Page validation with bounds checking
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $page = max(MIN_PAGE_NUMBER, min(MAX_PAGE_NUMBER, $page));
 $perpage = RESULTS_PER_PAGE;
 

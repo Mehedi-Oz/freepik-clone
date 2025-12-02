@@ -4,12 +4,12 @@
 const BREAKPOINTS = {
   MOBILE: 640,
   TABLET: 768,
-  DESKTOP: 1280
+  DESKTOP: 1280,
 };
 
 const PAGINATION = {
   ITEMS_PER_PAGE: 20,
-  MAX_PAGES: 1000
+  MAX_PAGES: 1000,
 };
 
 // Environment from PHP (default to production)
@@ -26,7 +26,7 @@ window.addEventListener('error', function (event) {
       filename: event.filename,
       lineno: event.lineno,
       colno: event.colno,
-      error: event.error
+      error: event.error,
     });
   }
   // Prevent default error handling
@@ -51,7 +51,7 @@ function safeEventHandler(handler) {
         console.error('Handler error details:', {
           error: error.message,
           stack: error.stack,
-          args: args
+          args: args,
         });
       }
     }
@@ -96,7 +96,14 @@ const elements = {
   sidebarHelperIcons: null,
   imageGallery: null,
   tagsContainer: null,
-  // ... more elements cached as needed
+  // Filter elements
+  filterSection: null,
+  desktopFilters: {},
+  // Mobile elements
+  mobileSidebar: null,
+  mobileSidebarOverlay: null,
+  mobileMenuBtn: null,
+  mobileSidebarClose: null,
 };
 
 // Function to refresh cached elements (call after DOM updates)
@@ -110,6 +117,23 @@ function refreshElementCache() {
   elements.sidebarHelperIcons = document.querySelector('.sidebar-helper-icons .flex');
   elements.imageGallery = document.getElementById('image-gallery');
   elements.tagsContainer = document.getElementById('tags-container');
+  elements.filterSection = document.getElementById('filters-section');
+
+  // Cache desktop filter buttons and popups
+  const filterIds = ['license', 'ai', 'orientation', 'color', 'people', 'filetype'];
+  filterIds.forEach(id => {
+    elements.desktopFilters[id] = {
+      btn: document.getElementById(`${id}-btn`),
+      popup: document.getElementById(`${id}-popup`),
+      chevron: document.getElementById(`${id}-chevron`)
+    };
+  });
+
+  // Cache mobile sidebar elements
+  elements.mobileSidebar = document.getElementById('mobile-sidebar');
+  elements.mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+  elements.mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  elements.mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 }
 
 // =============================================
@@ -132,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeMobileAllTools();
   initializeFilterHandlers();
   initializeImageLazyLoading();
+  initializePeopleCountButtons();
 });
 
 // =============================================
@@ -175,15 +200,17 @@ function initializeImageLazyLoading() {
   // Function to check if image is in viewport
   function isInViewport(img) {
     const rect = img.getBoundingClientRect();
-    return rect.top < window.innerHeight + 200 &&
+    return (
+      rect.top < window.innerHeight + 200 &&
       rect.bottom > -200 &&
       rect.left < window.innerWidth + 200 &&
-      rect.right > -200;
+      rect.right > -200
+    );
   }
 
   // Load all images that are already in viewport immediately
   function loadVisibleImages() {
-    document.querySelectorAll('img[data-src]').forEach(img => {
+    document.querySelectorAll('img[data-src]').forEach((img) => {
       if (isInViewport(img)) {
         loadImageDirectly(img);
       }
@@ -197,7 +224,7 @@ function initializeImageLazyLoading() {
   setTimeout(() => {
     const remainingImages = document.querySelectorAll('img[data-src]');
     if (remainingImages.length > 0) {
-      remainingImages.forEach(img => {
+      remainingImages.forEach((img) => {
         loadImageDirectly(img);
       });
     }
@@ -207,7 +234,7 @@ function initializeImageLazyLoading() {
   if (!('IntersectionObserver' in window)) {
     // Fallback: Load all remaining images after a short delay
     setTimeout(() => {
-      document.querySelectorAll('img[data-src]').forEach(img => {
+      document.querySelectorAll('img[data-src]').forEach((img) => {
         loadImageDirectly(img);
       });
     }, 100);
@@ -215,26 +242,29 @@ function initializeImageLazyLoading() {
   }
 
   // Create Intersection Observer with options
-  const imageObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        if (img.dataset.src) {
-          loadImageDirectly(img);
-          observer.unobserve(img);
+  const imageObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          if (img.dataset.src) {
+            loadImageDirectly(img);
+            observer.unobserve(img);
+          }
         }
-      }
-    });
-  }, {
-    rootMargin: '200px', // Start loading 200px before image enters viewport
-    threshold: 0.01
-  });
+      });
+    },
+    {
+      rootMargin: '200px', // Start loading 200px before image enters viewport
+      threshold: 0.01,
+    }
+  );
 
   // Store observer globally so it can be reused
   window.imageObserver = imageObserver;
 
   // Observe all remaining lazy images
-  document.querySelectorAll('img[data-src]').forEach(img => {
+  document.querySelectorAll('img[data-src]').forEach((img) => {
     imageObserver.observe(img);
     img.classList.add('observed');
   });
@@ -247,10 +277,12 @@ function initializeImageLazyLoading() {
 function observeLazyImages() {
   function isInViewport(img) {
     const rect = img.getBoundingClientRect();
-    return rect.top < window.innerHeight + 200 &&
+    return (
+      rect.top < window.innerHeight + 200 &&
       rect.bottom > -200 &&
       rect.left < window.innerWidth + 200 &&
-      rect.right > -200;
+      rect.right > -200
+    );
   }
 
   function loadImageDirectly(img) {
@@ -263,14 +295,14 @@ function observeLazyImages() {
 
   if (!window.imageObserver) {
     // Fallback: if observer not available, load all images directly
-    document.querySelectorAll('img[data-src]').forEach(img => {
+    document.querySelectorAll('img[data-src]').forEach((img) => {
       loadImageDirectly(img);
     });
     return;
   }
 
   // Load visible images immediately, observe the rest
-  document.querySelectorAll('img[data-src]').forEach(img => {
+  document.querySelectorAll('img[data-src]').forEach((img) => {
     if (!img.classList.contains('observed')) {
       if (isInViewport(img)) {
         // Already visible, load immediately
@@ -310,7 +342,6 @@ function initializeSidebar() {
 
       // On mobile, sidebar is hidden (display: none via CSS max-sm:hidden)
       // Don't manipulate classes here to avoid conflicts
-
     } else if (screenWidth >= BREAKPOINTS.DESKTOP) {
       // Desktop view: show collapse button and apply user preference
       if (collapseBtn) {
@@ -338,7 +369,7 @@ function initializeSidebar() {
     sidebarLogo.classList.add('justify-center');
     // Use cached elements
     if (elements.sidebarTexts) {
-      elements.sidebarTexts.forEach(text => {
+      elements.sidebarTexts.forEach((text) => {
         text.classList.add('hidden');
       });
     }
@@ -352,13 +383,13 @@ function initializeSidebar() {
     }
 
     if (elements.sidebarMenuLinks) {
-      elements.sidebarMenuLinks.forEach(link => {
+      elements.sidebarMenuLinks.forEach((link) => {
         link.classList.remove('p-2');
         link.classList.add('p-1', 'justify-center');
       });
     }
     if (elements.sidebarMenuSvgs) {
-      elements.sidebarMenuSvgs.forEach(svg => {
+      elements.sidebarMenuSvgs.forEach((svg) => {
         svg.classList.add('m-1');
       });
     }
@@ -395,7 +426,7 @@ function initializeSidebar() {
     setTimeout(() => {
       // Use cached elements
       if (elements.sidebarTexts) {
-        elements.sidebarTexts.forEach(text => {
+        elements.sidebarTexts.forEach((text) => {
           text.classList.remove('hidden');
         });
       }
@@ -410,13 +441,13 @@ function initializeSidebar() {
     sidebarDivider.classList.remove('mx-2');
 
     if (elements.sidebarMenuLinks) {
-      elements.sidebarMenuLinks.forEach(link => {
+      elements.sidebarMenuLinks.forEach((link) => {
         link.classList.add('p-2');
         link.classList.remove('p-1', 'justify-center');
       });
     }
     if (elements.sidebarMenuSvgs) {
-      elements.sidebarMenuSvgs.forEach(svg => {
+      elements.sidebarMenuSvgs.forEach((svg) => {
         svg.classList.remove('m-1');
       });
     }
@@ -431,8 +462,12 @@ function initializeSidebar() {
     document.querySelector('.sidebar-helper-icons .flex').classList.add('justify-between');
     document.querySelector('.sidebar-helper-icons .flex').classList.remove('justify-center');
     document.querySelector('.sidebar-helper-icons .flex > div').classList.add('flex', 'gap-4');
-    document.querySelector('.sidebar-helper-icons .flex > div').classList.remove('flex-col', 'gap-2');
-    document.querySelector('.sidebar-helper-icons .flex > div').children[1].classList.remove('hidden');
+    document
+      .querySelector('.sidebar-helper-icons .flex > div')
+      .classList.remove('flex-col', 'gap-2');
+    document
+      .querySelector('.sidebar-helper-icons .flex > div')
+      .children[1].classList.remove('hidden');
   }
 
   window.addEventListener('resize', debounce(handleResize, 250));
@@ -449,7 +484,6 @@ function initializeSidebar() {
     }
   });
 }
-
 
 // Search bar clear button
 function initializeSearchBar() {
@@ -476,17 +510,15 @@ function initializeSearchBar() {
   }
 }
 
-
 // Close <details> elements when clicking outside
 document.addEventListener('click', function (e) {
   const details = document.querySelectorAll('details');
-  details.forEach(detail => {
+  details.forEach((detail) => {
     if (detail.open && !detail.contains(e.target)) {
       detail.open = false;
     }
   });
 });
-
 
 // Filter bar toggle with cache
 const chevron = document.querySelector('.chevron');
@@ -538,18 +570,20 @@ filtersButton?.addEventListener('click', () => {
 });
 
 // Reset filter display on resize to prevent conflicts between mobile and desktop views
-window.addEventListener('resize', debounce(() => {
-  if (target) {
-    if (!isDesktopView()) {
-      // On mobile, hide desktop filters
-      target.style.display = 'none';
-    } else {
-      // On desktop, restore cached state
-      target.style.display = isDown ? 'flex' : 'none';
+window.addEventListener(
+  'resize',
+  debounce(() => {
+    if (target) {
+      if (!isDesktopView()) {
+        // On mobile, hide desktop filters
+        target.style.display = 'none';
+      } else {
+        // On desktop, restore cached state
+        target.style.display = isDown ? 'flex' : 'none';
+      }
     }
-  }
-}, 250));
-
+  }, 250)
+);
 
 // Desktop filter popups
 function initializeDesktopFilters() {
@@ -559,20 +593,19 @@ function initializeDesktopFilters() {
     { btn: 'orientation-btn', popup: 'orientation-popup', chevron: 'orientation-chevron' },
     { btn: 'color-btn', popup: 'color-popup', chevron: 'color-chevron' },
     { btn: 'people-btn', popup: 'people-popup', chevron: 'people-chevron' },
-    { btn: 'filetype-btn', popup: 'filetype-popup', chevron: 'filetype-chevron' }
+    { btn: 'filetype-btn', popup: 'filetype-popup', chevron: 'filetype-chevron' },
   ];
 
   function positionPopup(button, popup) {
     const buttonRect = button.getBoundingClientRect();
     const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-    popup.style.left = (buttonRect.left + scrollLeft) + 'px';
-    popup.style.top = (buttonRect.bottom + 8) + 'px';
+    popup.style.left = buttonRect.left + scrollLeft + 'px';
+    popup.style.top = buttonRect.bottom + 8 + 'px';
   }
 
   function closeAllPopups(except = null) {
-    filterElements.forEach(element => {
-      const popup = document.getElementById(element.popup);
-      const chevron = document.getElementById(element.chevron);
+    Object.values(elements.desktopFilters).forEach((element) => {
+      const { popup, chevron } = element;
       if (popup && popup !== except) {
         popup.classList.add('hidden');
         popup.style.display = '';
@@ -593,10 +626,8 @@ function initializeDesktopFilters() {
   }
 
   // Modify the filter popup logic to allow multiple filters to remain open simultaneously
-  filterElements.forEach(element => {
-    const btn = document.getElementById(element.btn);
-    const popup = document.getElementById(element.popup);
-    const chevron = document.getElementById(element.chevron);
+  Object.values(elements.desktopFilters).forEach((element) => {
+    const { btn, popup, chevron } = element;
 
     if (btn && popup) {
       btn.addEventListener('click', (e) => {
@@ -642,14 +673,16 @@ function initializeDesktopFilters() {
 
   document.addEventListener('click', (e) => {
     const isInsideFilter = e.target.closest('[id$="-btn"], [id$="-chevron"], [id$="-popup"]');
-    const isInsideRelevance = e.target.closest('#relevance-chevron, #relevance-popup') || e.target.closest('li:has(#relevance-chevron)');
+    const isInsideRelevance =
+      e.target.closest('#relevance-chevron, #relevance-popup') ||
+      e.target.closest('li:has(#relevance-chevron)');
     if (!isInsideFilter && !isInsideRelevance) {
       closeAllPopups();
     }
   });
 
   window.addEventListener('scroll', () => {
-    filterElements.forEach(element => {
+    filterElements.forEach((element) => {
       const btn = document.getElementById(element.btn);
       const popup = document.getElementById(element.popup);
       if (btn && popup && !popup.classList.contains('hidden')) {
@@ -657,17 +690,20 @@ function initializeDesktopFilters() {
       }
     });
   });
-  window.addEventListener('resize', debounce(() => {
-    filterElements.forEach(element => {
-      const btn = document.getElementById(element.btn);
-      const popup = document.getElementById(element.popup);
-      if (btn && popup && !popup.classList.contains('hidden')) {
-        positionPopup(btn, popup);
-      }
-    });
-  }, 250));
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      filterElements.forEach((element) => {
+        const btn = document.getElementById(element.btn);
+        const popup = document.getElementById(element.popup);
+        if (btn && popup && !popup.classList.contains('hidden')) {
+          positionPopup(btn, popup);
+        }
+      });
+    }, 250)
+  );
 
-  filterElements.forEach(element => {
+  filterElements.forEach((element) => {
     const popup = document.getElementById(element.popup);
     if (popup) {
       popup.classList.add('hidden');
@@ -680,24 +716,22 @@ function initializeDesktopFilters() {
   }
 }
 
-
 // Button group toggles
-document.querySelectorAll('.people-count-btn').forEach(btn => {
-  btn.addEventListener('click', function () {
-    document.querySelectorAll('.people-count-btn').forEach(b => b.classList.remove('bg-green-600'));
-    this.classList.add('bg-green-600');
+// Button group toggles
+function initializePeopleCountButtons() {
+  document.querySelectorAll('.people-count-btn').forEach((btn) => {
+    btn.addEventListener('click', function () {
+      document
+        .querySelectorAll('.people-count-btn')
+        .forEach((b) => b.classList.remove('bg-green-600'));
+      this.classList.add('bg-green-600');
+    });
   });
-});
-
-
-
+}
 
 // Mobile sidebar
 function initializeMobileSidebar() {
-  const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
-  const mobileSidebar = document.getElementById('mobile-sidebar');
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
+  const { mobileSidebarOverlay, mobileSidebar, mobileMenuBtn, mobileSidebarClose } = elements;
 
   mobileMenuBtn?.addEventListener('click', function () {
     mobileSidebarOverlay.classList.remove('hidden');
@@ -719,7 +753,6 @@ function initializeMobileSidebar() {
     }
   });
 }
-
 
 // Mobile filter overlay and All Images dropdown
 function initializeMobileFilters() {
@@ -776,7 +809,7 @@ function initializeMobileFilters() {
   const categoryOptions = document.querySelectorAll('.mobile-category-option');
   const categoryRadios = document.querySelectorAll('input[name="mobile-category"]');
 
-  categoryRadios.forEach(radio => {
+  categoryRadios.forEach((radio) => {
     radio.addEventListener('change', function () {
       const selectedOption = this.closest('.mobile-category-option');
       const categoryText = selectedOption?.querySelector('span')?.textContent.trim();
@@ -787,7 +820,7 @@ function initializeMobileFilters() {
       }
 
       // Update text colors
-      categoryOptions.forEach(opt => {
+      categoryOptions.forEach((opt) => {
         opt.classList.remove('text-white');
         opt.classList.add('text-gray-400');
       });
@@ -804,13 +837,15 @@ function initializeMobileFilters() {
 
   // Close dropdown when clicking outside
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('#mobile-all-images-btn') && !e.target.closest('#mobile-all-images-dropdown')) {
+    if (
+      !e.target.closest('#mobile-all-images-btn') &&
+      !e.target.closest('#mobile-all-images-dropdown')
+    ) {
       mobileAllImagesDropdown?.classList.add('hidden');
       mobileAllImagesChevron?.classList.remove('rotate-180');
     }
   });
 }
-
 
 // Mobile filter popups
 function initializeMobileFilterPopups() {
@@ -820,10 +855,10 @@ function initializeMobileFilterPopups() {
     { btn: 'mobile-orientation-btn', popup: 'mobile-orientation-popup' },
     { btn: 'mobile-color-btn', popup: 'mobile-color-popup' },
     { btn: 'mobile-people-btn', popup: 'mobile-people-popup' },
-    { btn: 'mobile-filetype-btn', popup: 'mobile-filetype-popup' }
+    { btn: 'mobile-filetype-btn', popup: 'mobile-filetype-popup' },
   ];
 
-  mobileFilterElements.forEach(element => {
+  mobileFilterElements.forEach((element) => {
     const btn = document.getElementById(element.btn);
     const popup = document.getElementById(element.popup);
 
@@ -843,10 +878,6 @@ function initializeMobileFilterPopups() {
   });
 }
 
-
-
-
-
 // Image card overlays
 function initializeImageCards() {
   const icons = {
@@ -864,7 +895,7 @@ function initializeImageCards() {
 
     search: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
       <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607Z" />
-    </svg>`
+    </svg>`,
   };
 
   function createImageOverlay() {
@@ -983,7 +1014,7 @@ function initializeImageCards() {
         success: 'bg-green-600 text-white',
         error: 'bg-red-600 text-white',
         info: 'bg-blue-600 text-white',
-        warning: 'bg-yellow-600 text-white'
+        warning: 'bg-yellow-600 text-white',
       };
 
       notification.className += ' ' + (colors[type] || colors.info);
@@ -1023,7 +1054,7 @@ function initializeImageCards() {
           openImageEditor(imageId);
           break;
 
-        case 'save':
+        case 'save': {
           const saved = saveToCollection(imageId);
           if (saved) {
             showNotification('Image saved to collection!', 'success');
@@ -1031,6 +1062,7 @@ function initializeImageCards() {
             showNotification('Image already in collection', 'info');
           }
           break;
+        }
 
         case 'discover':
           findSimilarImages(imageId);
@@ -1047,7 +1079,7 @@ function initializeImageCards() {
 
   const imageCards = document.querySelectorAll('.image-card');
 
-  imageCards.forEach(card => {
+  imageCards.forEach((card) => {
     card.innerHTML += createImageOverlay();
 
     const downloadBtn = card.querySelector('.download-btn');
@@ -1058,28 +1090,39 @@ function initializeImageCards() {
     const imageId = card.dataset.image;
     const imageAlt = card.querySelector('img').alt;
 
-    downloadBtn?.addEventListener('click', safeEventHandler((e) => {
-      e.preventDefault();
-      handleImageAction('download', imageId, imageAlt);
-    }));
+    downloadBtn?.addEventListener(
+      'click',
+      safeEventHandler((e) => {
+        e.preventDefault();
+        handleImageAction('download', imageId, imageAlt);
+      })
+    );
 
-    editBtn?.addEventListener('click', safeEventHandler((e) => {
-      e.preventDefault();
-      handleImageAction('edit', imageId, imageAlt);
-    }));
+    editBtn?.addEventListener(
+      'click',
+      safeEventHandler((e) => {
+        e.preventDefault();
+        handleImageAction('edit', imageId, imageAlt);
+      })
+    );
 
-    saveBtn?.addEventListener('click', safeEventHandler((e) => {
-      e.preventDefault();
-      handleImageAction('save', imageId, imageAlt);
-    }));
+    saveBtn?.addEventListener(
+      'click',
+      safeEventHandler((e) => {
+        e.preventDefault();
+        handleImageAction('save', imageId, imageAlt);
+      })
+    );
 
-    discoverBtn?.addEventListener('click', safeEventHandler((e) => {
-      e.preventDefault();
-      handleImageAction('discover', imageId, imageAlt);
-    }));
+    discoverBtn?.addEventListener(
+      'click',
+      safeEventHandler((e) => {
+        e.preventDefault();
+        handleImageAction('discover', imageId, imageAlt);
+      })
+    );
   });
 }
-
 
 // Search tags with arrow controls
 function initializeSearchTags() {
@@ -1089,7 +1132,7 @@ function initializeSearchTags() {
   const scrollLeftBtn = document.getElementById('tags-scroll-left');
   const scrollRightBtn = document.getElementById('tags-scroll-right');
 
-  searchTags.forEach(tag => {
+  searchTags.forEach((tag) => {
     tag.addEventListener('click', function () {
       const tagText = this.textContent.trim();
 
@@ -1099,10 +1142,10 @@ function initializeSearchTags() {
 
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
 
-      searchTags.forEach(t => t.classList.remove('bg-gray-600'));
+      searchTags.forEach((t) => t.classList.remove('bg-gray-600'));
       this.classList.add('bg-gray-600');
     });
   });
@@ -1129,14 +1172,14 @@ function initializeSearchTags() {
     scrollLeftBtn.addEventListener('click', () => {
       tagsContainer.scrollBy({
         left: -scrollAmount,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     });
 
     scrollRightBtn.addEventListener('click', () => {
       tagsContainer.scrollBy({
         left: scrollAmount,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     });
 
@@ -1145,7 +1188,6 @@ function initializeSearchTags() {
     window.addEventListener('resize', debounce(updateArrows, 250));
   }
 }
-
 
 // Sidebar popup handler
 function initializeSidebarFooter() {
@@ -1169,13 +1211,13 @@ function initializeSidebarFooter() {
       if (collapsedFooterIcons) {
         collapsedFooterIcons.classList.add('hidden');
       }
-    }
+    },
   });
 
   initPopupHandler({
     buttonId: 'all-tools-btn',
     popupId: 'all-tools-popup',
-    popupRegistry: popupRegistry
+    popupRegistry: popupRegistry,
   });
 
   const collapsedFooterIcons = document.getElementById('collapsed-footer-icons');
@@ -1221,7 +1263,7 @@ function initPopupHandler(config) {
 
   function closeOtherPopups() {
     if (popupRegistry) {
-      popupRegistry.forEach(otherPopup => {
+      popupRegistry.forEach((otherPopup) => {
         if (otherPopup.element !== popup && !otherPopup.element.classList.contains('hidden')) {
           otherPopup.element.classList.add('hidden');
           if (otherPopup.onClose) {
@@ -1235,7 +1277,7 @@ function initPopupHandler(config) {
   if (popupRegistry) {
     popupRegistry.add({
       element: popup,
-      onClose: onClose
+      onClose: onClose,
     });
   }
 
@@ -1262,7 +1304,7 @@ function initPopupHandler(config) {
     }
   });
 
-  popup.querySelectorAll('a').forEach(link => {
+  popup.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', function () {
       popup.classList.add('hidden');
       if (onClose) onClose();
@@ -1277,7 +1319,8 @@ function initPopupHandler(config) {
 // Theme popup setup function
 function setupThemePopup(themeButton) {
   const themePopup = document.createElement('div');
-  themePopup.className = 'absolute bottom-full mb-2 w-32 bg-gray-800 border border-gray-600 rounded shadow-lg z-50 text-white text-sm hidden';
+  themePopup.className =
+    'absolute bottom-full mb-2 w-32 bg-gray-800 border border-gray-600 rounded shadow-lg z-50 text-white text-sm hidden';
   themePopup.innerHTML = `
     <ul class="py-1">
       <li class="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer">
@@ -1318,20 +1361,18 @@ function setupThemePopup(themeButton) {
     }
   });
 
-  themePopup.querySelectorAll('li').forEach(item => {
+  themePopup.querySelectorAll('li').forEach((item) => {
     item.addEventListener('click', function () {
       themePopup.classList.add('hidden');
     });
   });
 }
 
-
-
-
-
 // Mobile All Tools page
 function initializeMobileAllTools() {
-  const mobileAllToolsBtn = document.querySelector('#mobile-sidebar ul:nth-of-type(2) li:nth-child(4) a');
+  const mobileAllToolsBtn = document.querySelector(
+    '#mobile-sidebar ul:nth-of-type(2) li:nth-child(4) a'
+  );
   const mobileAllToolsPage = document.getElementById('mobile-all-tools-page');
   const mobileAllToolsBack = document.getElementById('mobile-all-tools-back');
   const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
@@ -1360,7 +1401,7 @@ function initializeMobileAllTools() {
       document.body.classList.add('overflow-hidden');
     });
 
-    mobileAllToolsPage.querySelectorAll('a:not(#mobile-all-tools-back)').forEach(link => {
+    mobileAllToolsPage.querySelectorAll('a:not(#mobile-all-tools-back)').forEach((link) => {
       link.addEventListener('click', function (e) {
         e.preventDefault();
         mobileAllToolsPage.classList.add('hidden');
@@ -1372,7 +1413,6 @@ function initializeMobileAllTools() {
 
 // Filter AJAX handlers
 function initializeFilterHandlers() {
-
   // Helper function to highlight filter button when non-default option is selected
   function updateFilterButtonHighlight(buttonId, isActive) {
     const btn = document.getElementById(buttonId);
@@ -1397,7 +1437,14 @@ function initializeFilterHandlers() {
    * @param {boolean} autoApply - Whether to auto-apply (desktop) or just close popup (mobile)
    * @param {boolean} resetPage - Whether to reset page to 1 when filter changes
    */
-  function createFilterHandler(filterName, defaultValue, buttonId, popupId, autoApply = true, resetPage = true) {
+  function createFilterHandler(
+    filterName,
+    defaultValue,
+    buttonId,
+    popupId,
+    autoApply = true,
+    resetPage = true
+  ) {
     return function (radio) {
       radio.addEventListener('change', function () {
         if (autoApply) {
@@ -1449,11 +1496,11 @@ function initializeFilterHandlers() {
   function saveFiltersToCache() {
     const filters = {
       'ai-type': document.querySelector('input[name="ai-type"]:checked')?.value || 'show_all',
-      'license': document.querySelector('input[name="license"]:checked')?.value || 'all',
-      'orientation': document.querySelector('input[name="orientation"]:checked')?.value || 'all',
-      'filetype': document.querySelector('input[name="filetype"]:checked')?.value || 'all',
-      'color': new URLSearchParams(window.location.search).get('color') || 'all',
-      'people': new URLSearchParams(window.location.search).get('people') || 'all'
+      license: document.querySelector('input[name="license"]:checked')?.value || 'all',
+      orientation: document.querySelector('input[name="orientation"]:checked')?.value || 'all',
+      filetype: document.querySelector('input[name="filetype"]:checked')?.value || 'all',
+      color: new URLSearchParams(window.location.search).get('color') || 'all',
+      people: new URLSearchParams(window.location.search).get('people') || 'all',
     };
     localStorage.setItem(FILTER_CACHE_KEY, JSON.stringify(filters));
   }
@@ -1480,15 +1527,21 @@ function initializeFilterHandlers() {
 
     // Apply License filter
     const licenseRadio = document.querySelector(`input[name="license"][value="${license}"]`);
-    const mobileLicenseRadio = document.querySelector(`input[name="mobile-license"][value="${license}"]`);
+    const mobileLicenseRadio = document.querySelector(
+      `input[name="mobile-license"][value="${license}"]`
+    );
     if (licenseRadio) licenseRadio.checked = true;
     if (mobileLicenseRadio) mobileLicenseRadio.checked = true;
     updateFilterButtonHighlight('license-btn', license !== 'all');
     updateFilterButtonHighlight('mobile-license-btn', license !== 'all');
 
     // Apply Orientation filter
-    const orientationRadio = document.querySelector(`input[name="orientation"][value="${orientation}"]`);
-    const mobileOrientationRadio = document.querySelector(`input[name="mobile-orientation"][value="${orientation}"]`);
+    const orientationRadio = document.querySelector(
+      `input[name="orientation"][value="${orientation}"]`
+    );
+    const mobileOrientationRadio = document.querySelector(
+      `input[name="mobile-orientation"][value="${orientation}"]`
+    );
     if (orientationRadio) orientationRadio.checked = true;
     if (mobileOrientationRadio) mobileOrientationRadio.checked = true;
     updateFilterButtonHighlight('orientation-btn', orientation !== 'all');
@@ -1496,7 +1549,9 @@ function initializeFilterHandlers() {
 
     // Apply Filetype filter
     const filetypeRadio = document.querySelector(`input[name="filetype"][value="${filetype}"]`);
-    const mobileFiletypeRadio = document.querySelector(`input[name="mobile-filetype"][value="${filetype}"]`);
+    const mobileFiletypeRadio = document.querySelector(
+      `input[name="mobile-filetype"][value="${filetype}"]`
+    );
     if (filetypeRadio) filetypeRadio.checked = true;
     if (mobileFiletypeRadio) mobileFiletypeRadio.checked = true;
     updateFilterButtonHighlight('filetype-btn', filetype !== 'all');
@@ -1515,11 +1570,14 @@ function initializeFilterHandlers() {
   loadFiltersFromURL();
 
   // Reload filters from URL on resize (for seamless mobile/desktop switching)
-  window.addEventListener('resize', debounce(() => {
-    loadFiltersFromURL();
-  }, 250));
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      loadFiltersFromURL();
+    }, 250)
+  );
 
-  document.getElementById("apply-filters-btn")?.addEventListener("click", function () {
+  document.getElementById('apply-filters-btn')?.addEventListener('click', function () {
     const urlParams = new URLSearchParams(window.location.search);
 
     // Reset page to 1 when filters change
@@ -1529,13 +1587,13 @@ function initializeFilterHandlers() {
     const aiType = document.querySelector("input[name='ai-type']:checked");
     if (aiType) {
       if (aiType.value === 'show_all') {
-        urlParams.delete("ai-type");
+        urlParams.delete('ai-type');
       } else {
-        urlParams.set("ai-type", aiType.value);
+        urlParams.set('ai-type', aiType.value);
       }
     } else {
       // Default behavior if nothing checked (shouldn't happen usually)
-      urlParams.delete("ai-type");
+      urlParams.delete('ai-type');
     }
 
     // Update URL without reloading
@@ -1561,7 +1619,8 @@ function initializeFilterHandlers() {
     const hasColor = urlParams.has('color') && urlParams.get('color') !== 'all';
     const hasPeople = urlParams.has('people') && urlParams.get('people') !== 'all';
 
-    const hasActiveFilter = hasLicense || hasAiType || hasOrientation || hasFiletype || hasColor || hasPeople;
+    const hasActiveFilter =
+      hasLicense || hasAiType || hasOrientation || hasFiletype || hasColor || hasPeople;
 
     if (hasActiveFilter) {
       clearBtn.classList.remove('hidden');
@@ -1577,7 +1636,7 @@ function initializeFilterHandlers() {
   updateDesktopClearAllVisibility();
 
   // Clear Desktop Filters button
-  document.getElementById("clear-desktop-filters")?.addEventListener("click", function () {
+  document.getElementById('clear-desktop-filters')?.addEventListener('click', function () {
     // Reset all desktop filter radio buttons to default values
     const defaultLicense = document.querySelector("input[name='license'][value='all']");
     const defaultAiType = document.querySelector("input[name='ai-type'][value='show_all']");
@@ -1600,7 +1659,8 @@ function initializeFilterHandlers() {
     urlParams.delete('page');
 
     // Update URL without reloading
-    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+    const newUrl =
+      window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
     window.history.pushState({}, '', newUrl);
 
     // Load images via AJAX
@@ -1622,10 +1682,18 @@ function initializeFilterHandlers() {
     updateFilterButtonHighlight('mobile-color-btn', false);
     updateFilterButtonHighlight('mobile-people-btn', false);
 
-    const mobileDefaultLicense = document.querySelector("input[name='mobile-license'][value='all']");
-    const mobileDefaultAiType = document.querySelector("input[name='mobile-ai-type'][value='show_all']");
-    const mobileDefaultOrientation = document.querySelector("input[name='mobile-orientation'][value='all']");
-    const mobileDefaultFiletype = document.querySelector("input[name='mobile-filetype'][value='all']");
+    const mobileDefaultLicense = document.querySelector(
+      "input[name='mobile-license'][value='all']"
+    );
+    const mobileDefaultAiType = document.querySelector(
+      "input[name='mobile-ai-type'][value='show_all']"
+    );
+    const mobileDefaultOrientation = document.querySelector(
+      "input[name='mobile-orientation'][value='all']"
+    );
+    const mobileDefaultFiletype = document.querySelector(
+      "input[name='mobile-filetype'][value='all']"
+    );
 
     if (mobileDefaultLicense) mobileDefaultLicense.checked = true;
     if (mobileDefaultAiType) mobileDefaultAiType.checked = true;
@@ -1658,7 +1726,9 @@ function initializeFilterHandlers() {
     // Check current radio button selections (in case not yet applied to URL)
     const licenseSelected = document.querySelector("input[name='mobile-license']:checked")?.value;
     const aiTypeSelected = document.querySelector("input[name='mobile-ai-type']:checked")?.value;
-    const orientationSelected = document.querySelector("input[name='mobile-orientation']:checked")?.value;
+    const orientationSelected = document.querySelector(
+      "input[name='mobile-orientation']:checked"
+    )?.value;
     const filetypeSelected = document.querySelector("input[name='mobile-filetype']:checked")?.value;
 
     const hasActiveRadio =
@@ -1667,7 +1737,14 @@ function initializeFilterHandlers() {
       (orientationSelected && orientationSelected !== 'all') ||
       (filetypeSelected && filetypeSelected !== 'all');
 
-    const hasActiveFilter = hasLicense || hasAiType || hasOrientation || hasFiletype || hasColor || hasPeople || hasActiveRadio;
+    const hasActiveFilter =
+      hasLicense ||
+      hasAiType ||
+      hasOrientation ||
+      hasFiletype ||
+      hasColor ||
+      hasPeople ||
+      hasActiveRadio;
 
     if (hasActiveFilter) {
       clearBtn.classList.remove('hidden');
@@ -1683,19 +1760,27 @@ function initializeFilterHandlers() {
   updateClearAllButtonVisibility();
 
   // Update Clear All button visibility when any mobile filter changes
-  document.querySelectorAll("input[name='mobile-license'], input[name='mobile-ai-type'], input[name='mobile-orientation'], input[name='mobile-filetype']").forEach(radio => {
-    radio.addEventListener('change', updateClearAllButtonVisibility);
-  });
+  document
+    .querySelectorAll(
+      "input[name='mobile-license'], input[name='mobile-ai-type'], input[name='mobile-orientation'], input[name='mobile-filetype']"
+    )
+    .forEach((radio) => {
+      radio.addEventListener('change', updateClearAllButtonVisibility);
+    });
 
   // Also update when mobile filter overlay opens (to catch URL-based filters)
-  document.getElementById('mobile-filters-btn')?.addEventListener('click', updateClearAllButtonVisibility);
+  document
+    .getElementById('mobile-filters-btn')
+    ?.addEventListener('click', updateClearAllButtonVisibility);
 
   // Clear Mobile Filters button
-  document.getElementById("clear-mobile-filters")?.addEventListener("click", function () {
+  document.getElementById('clear-mobile-filters')?.addEventListener('click', function () {
     // Reset all mobile filter radio buttons to default values
     const defaultLicense = document.querySelector("input[name='mobile-license'][value='all']");
     const defaultAiType = document.querySelector("input[name='mobile-ai-type'][value='show_all']");
-    const defaultOrientation = document.querySelector("input[name='mobile-orientation'][value='all']");
+    const defaultOrientation = document.querySelector(
+      "input[name='mobile-orientation'][value='all']"
+    );
     const defaultFiletype = document.querySelector("input[name='mobile-filetype'][value='all']");
 
     if (defaultLicense) defaultLicense.checked = true;
@@ -1714,7 +1799,8 @@ function initializeFilterHandlers() {
     urlParams.delete('page');
 
     // Update URL without reloading
-    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+    const newUrl =
+      window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
     window.history.pushState({}, '', newUrl);
 
     // Load images via AJAX
@@ -1739,7 +1825,9 @@ function initializeFilterHandlers() {
     // Reset desktop filter radio buttons too
     const desktopDefaultLicense = document.querySelector("input[name='license'][value='all']");
     const desktopDefaultAiType = document.querySelector("input[name='ai-type'][value='show_all']");
-    const desktopDefaultOrientation = document.querySelector("input[name='orientation'][value='all']");
+    const desktopDefaultOrientation = document.querySelector(
+      "input[name='orientation'][value='all']"
+    );
     const desktopDefaultFiletype = document.querySelector("input[name='filetype'][value='all']");
 
     if (desktopDefaultLicense) desktopDefaultLicense.checked = true;
@@ -1764,7 +1852,7 @@ function initializeFilterHandlers() {
   });
 
   // Apply Mobile Filters button
-  document.getElementById("apply-mobile-filters")?.addEventListener("click", function () {
+  document.getElementById('apply-mobile-filters')?.addEventListener('click', function () {
     const urlParams = new URLSearchParams(window.location.search);
 
     // Reset page to 1 when filters change
@@ -1772,9 +1860,12 @@ function initializeFilterHandlers() {
 
     // Collect all mobile filter values
     const license = document.querySelector("input[name='mobile-license']:checked")?.value || 'all';
-    const aiType = document.querySelector("input[name='mobile-ai-type']:checked")?.value || 'show_all';
-    const orientation = document.querySelector("input[name='mobile-orientation']:checked")?.value || 'all';
-    const filetype = document.querySelector("input[name='mobile-filetype']:checked")?.value || 'all';
+    const aiType =
+      document.querySelector("input[name='mobile-ai-type']:checked")?.value || 'show_all';
+    const orientation =
+      document.querySelector("input[name='mobile-orientation']:checked")?.value || 'all';
+    const filetype =
+      document.querySelector("input[name='mobile-filetype']:checked")?.value || 'all';
 
     // Get color and people from URL params (set via button clicks)
     const currentColor = urlParams.get('color') || 'all';
@@ -1824,41 +1915,55 @@ function initializeFilterHandlers() {
     }
   });
 
-
   // Unified filter handlers - Desktop (auto-apply) and Mobile (close popup only)
-  document.querySelectorAll('input[name="ai-type"]').forEach(
-    createFilterHandler('ai-type', 'show_all', 'ai-btn', 'ai-popup', true, false)
-  );
-  document.querySelectorAll('input[name="mobile-ai-type"]').forEach(
-    createFilterHandler('ai-type', 'show_all', 'ai-btn', 'mobile-ai-popup', false, false)
-  );
+  document
+    .querySelectorAll('input[name="ai-type"]')
+    .forEach(createFilterHandler('ai-type', 'show_all', 'ai-btn', 'ai-popup', true, false));
+  document
+    .querySelectorAll('input[name="mobile-ai-type"]')
+    .forEach(createFilterHandler('ai-type', 'show_all', 'ai-btn', 'mobile-ai-popup', false, false));
 
   // File Type filter handlers
-  document.querySelectorAll('input[name="filetype"]').forEach(
-    createFilterHandler('filetype', 'all', 'filetype-btn', 'filetype-popup', true, true)
-  );
-  document.querySelectorAll('input[name="mobile-filetype"]').forEach(
-    createFilterHandler('filetype', 'all', 'filetype-btn', 'mobile-filetype-popup', false, false)
-  );
+  document
+    .querySelectorAll('input[name="filetype"]')
+    .forEach(createFilterHandler('filetype', 'all', 'filetype-btn', 'filetype-popup', true, true));
+  document
+    .querySelectorAll('input[name="mobile-filetype"]')
+    .forEach(
+      createFilterHandler('filetype', 'all', 'filetype-btn', 'mobile-filetype-popup', false, false)
+    );
 
   // Orientation filter handlers
-  document.querySelectorAll('input[name="orientation"]').forEach(
-    createFilterHandler('orientation', 'all', 'orientation-btn', 'orientation-popup', true, true)
-  );
-  document.querySelectorAll('input[name="mobile-orientation"]').forEach(
-    createFilterHandler('orientation', 'all', 'orientation-btn', 'mobile-orientation-popup', false, false)
-  );
+  document
+    .querySelectorAll('input[name="orientation"]')
+    .forEach(
+      createFilterHandler('orientation', 'all', 'orientation-btn', 'orientation-popup', true, true)
+    );
+  document
+    .querySelectorAll('input[name="mobile-orientation"]')
+    .forEach(
+      createFilterHandler(
+        'orientation',
+        'all',
+        'orientation-btn',
+        'mobile-orientation-popup',
+        false,
+        false
+      )
+    );
 
   // License filter handlers
-  document.querySelectorAll('input[name="license"]').forEach(
-    createFilterHandler('license', 'all', 'license-btn', 'license-popup', true, true)
-  );
-  document.querySelectorAll('input[name="mobile-license"]').forEach(
-    createFilterHandler('license', 'all', 'license-btn', 'mobile-license-popup', false, false)
-  );
+  document
+    .querySelectorAll('input[name="license"]')
+    .forEach(createFilterHandler('license', 'all', 'license-btn', 'license-popup', true, true));
+  document
+    .querySelectorAll('input[name="mobile-license"]')
+    .forEach(
+      createFilterHandler('license', 'all', 'license-btn', 'mobile-license-popup', false, false)
+    );
 
   // Add event listener for color filter buttons (desktop and mobile)
-  document.querySelectorAll('[data-color]').forEach(button => {
+  document.querySelectorAll('[data-color]').forEach((button) => {
     button.addEventListener('click', function () {
       const urlParams = new URLSearchParams(window.location.search);
       const colorValue = this.getAttribute('data-color');
@@ -1914,7 +2019,7 @@ function initializeFilterHandlers() {
   });
 
   // Add event listener for people filter buttons
-  document.querySelectorAll('[data-people]').forEach(button => {
+  document.querySelectorAll('[data-people]').forEach((button) => {
     button.addEventListener('click', function () {
       const urlParams = new URLSearchParams(window.location.search);
       const peopleValue = this.getAttribute('data-people');
@@ -1995,7 +2100,8 @@ function initializeFilterHandlers() {
         return;
       }
 
-      const currentPage = parseInt(paginationUrlParams.get('page'), 10) || parseInt(pageInput?.value, 10) || 1;
+      const currentPage =
+        parseInt(paginationUrlParams.get('page'), 10) || parseInt(pageInput?.value, 10) || 1;
       const prevPage = currentPage - 1;
 
       // Don't go below page 1
@@ -2016,7 +2122,8 @@ function initializeFilterHandlers() {
         return;
       }
 
-      const currentPage = parseInt(paginationUrlParams.get('page'), 10) || parseInt(pageInput?.value, 10) || 1;
+      const currentPage =
+        parseInt(paginationUrlParams.get('page'), 10) || parseInt(pageInput?.value, 10) || 1;
       const nextPage = currentPage + 1;
 
       // Don't go beyond total pages
@@ -2055,13 +2162,16 @@ function initializeFilterHandlers() {
   const mobileNextPageButton = document.getElementById('mobile-next-page-btn');
   const mobilePageInput = document.getElementById('mobile-page-input');
   const mobileTotalPagesEl = document.getElementById('mobile-total-pages');
-  const mobileTotalPages = mobileTotalPagesEl ? parseInt(mobileTotalPagesEl.textContent, 10) : totalPages;
+  const mobileTotalPages = mobileTotalPagesEl
+    ? parseInt(mobileTotalPagesEl.textContent, 10)
+    : totalPages;
 
   if (mobilePrevPageButton) {
     mobilePrevPageButton.addEventListener('click', () => {
       if (mobilePrevPageButton.disabled) return;
 
-      const currentPage = parseInt(paginationUrlParams.get('page'), 10) || parseInt(mobilePageInput?.value, 10) || 1;
+      const currentPage =
+        parseInt(paginationUrlParams.get('page'), 10) || parseInt(mobilePageInput?.value, 10) || 1;
       const prevPage = currentPage - 1;
 
       if (prevPage < 1) return;
@@ -2076,7 +2186,8 @@ function initializeFilterHandlers() {
     mobileNextPageButton.addEventListener('click', () => {
       if (mobileNextPageButton.disabled) return;
 
-      const currentPage = parseInt(paginationUrlParams.get('page'), 10) || parseInt(mobilePageInput?.value, 10) || 1;
+      const currentPage =
+        parseInt(paginationUrlParams.get('page'), 10) || parseInt(mobilePageInput?.value, 10) || 1;
       const nextPage = currentPage + 1;
 
       if (nextPage > mobileTotalPages) return;
@@ -2194,18 +2305,21 @@ function loadImagesAjax(urlParams) {
   if (imageGallery) {
     // Use requestAnimationFrame to avoid blocking main thread
     requestAnimationFrame(() => {
-      const skeletonCards = Array(12).fill(0).map((_, i) => {
-        // Vary heights for visual interest (simulating masonry)
-        const heights = ['h-48', 'h-64', 'h-56', 'h-72', 'h-52', 'h-60'];
-        const height = heights[i % heights.length];
-        return `
+      const skeletonCards = Array(12)
+        .fill(0)
+        .map((_, i) => {
+          // Vary heights for visual interest (simulating masonry)
+          const heights = ['h-48', 'h-64', 'h-56', 'h-72', 'h-52', 'h-60'];
+          const height = heights[i % heights.length];
+          return `
           <div class="skeleton-card mb-4">
             <div class="bg-gray-700 rounded-lg ${height} w-full relative overflow-hidden animate-pulse">
               <div class="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 skeleton-shimmer"></div>
             </div>
           </div>
         `;
-      }).join('');
+        })
+        .join('');
 
       // Update DOM in next frame for smooth rendering
       requestAnimationFrame(() => {
@@ -2245,24 +2359,27 @@ function loadImagesAjax(urlParams) {
   const requestUrl = apiUrl + '?' + urlParams.toString() + cacheBuster;
 
   fetch(requestUrl)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok: ' + response.status);
       }
       return response.text(); // Get as text first to debug
     })
-    .then(text => {
+    .then((text) => {
       try {
         return JSON.parse(text);
       } catch (e) {
         throw new Error('Invalid JSON response: ' + text.substring(0, 200));
       }
     })
-    .then(data => {
+    .then((data) => {
       if (data.error) {
         console.error('Server error:', data.error);
         if (imageGallery) {
-          imageGallery.innerHTML = '<div class="w-full text-center text-white py-20 text-lg col-span-full">Server error: ' + escapeHtml(data.error) + '</div>';
+          imageGallery.innerHTML =
+            '<div class="w-full text-center text-white py-20 text-lg col-span-full">Server error: ' +
+            escapeHtml(data.error) +
+            '</div>';
         }
         return;
       }
@@ -2291,11 +2408,11 @@ function loadImagesAjax(urlParams) {
       updatePaginationControls(data.page || 1, data.totalPages || 1, data.total || 0);
 
       // Update Clear All button visibility (desktop and mobile)
-      if (typeof updateDesktopClearAllVisibility === 'function') {
-        updateDesktopClearAllVisibility();
+      if (typeof window.updateDesktopClearAllVisibility === 'function') {
+        window.updateDesktopClearAllVisibility();
       }
-      if (typeof updateClearAllButtonVisibility === 'function') {
-        updateClearAllButtonVisibility();
+      if (typeof window.updateClearAllButtonVisibility === 'function') {
+        window.updateClearAllButtonVisibility();
       }
 
       // Reinitialize image card overlays if needed
@@ -2303,10 +2420,13 @@ function loadImagesAjax(urlParams) {
         initializeImageCards();
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('Error loading images:', error);
       if (imageGallery) {
-        imageGallery.innerHTML = '<div class="w-full text-center text-white py-20 text-lg col-span-full">Error: ' + escapeHtml(error.message) + '</div>';
+        imageGallery.innerHTML =
+          '<div class="w-full text-center text-white py-20 text-lg col-span-full">Error: ' +
+          escapeHtml(error.message) +
+          '</div>';
       }
     });
 }

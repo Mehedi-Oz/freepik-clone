@@ -33,12 +33,13 @@ class Cache
           // APCu exists but is disabled, fallback to file-based cache
           // Prefer explicit app config or env var, otherwise use system temp
           if (defined('CACHE_DIR') && constant('CACHE_DIR')) {
-            self::$cacheDir = rtrim(constant('CACHE_DIR'), "\\/");
+            self::$cacheDir = rtrim(constant('CACHE_DIR'), '\\/');
           } elseif (getenv('FREEPIK_CACHE_DIR')) {
-            self::$cacheDir = rtrim(getenv('FREEPIK_CACHE_DIR'), "\\/");
+            self::$cacheDir = rtrim(getenv('FREEPIK_CACHE_DIR'), '\\/');
           } else {
             // Place cache under system temp to avoid writing into repo
-            self::$cacheDir = rtrim(sys_get_temp_dir(), "\\/") . DIRECTORY_SEPARATOR . 'freepik-clone-cache';
+            self::$cacheDir =
+              rtrim(sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'freepik-clone-cache';
           }
 
           if (!is_dir(self::$cacheDir)) {
@@ -50,11 +51,12 @@ class Cache
         // Fallback to file-based cache
         // Prefer explicit app config or env var, otherwise use system temp
         if (defined('CACHE_DIR') && constant('CACHE_DIR')) {
-          self::$cacheDir = rtrim(constant('CACHE_DIR'), "\\/");
+          self::$cacheDir = rtrim(constant('CACHE_DIR'), '\\/');
         } elseif (getenv('FREEPIK_CACHE_DIR')) {
-          self::$cacheDir = rtrim(getenv('FREEPIK_CACHE_DIR'), "\\/");
+          self::$cacheDir = rtrim(getenv('FREEPIK_CACHE_DIR'), '\\/');
         } else {
-          self::$cacheDir = rtrim(sys_get_temp_dir(), "\\/") . DIRECTORY_SEPARATOR . 'freepik-clone-cache';
+          self::$cacheDir =
+            rtrim(sys_get_temp_dir(), '\\/') . DIRECTORY_SEPARATOR . 'freepik-clone-cache';
         }
 
         if (!is_dir(self::$cacheDir)) {
@@ -126,7 +128,7 @@ class Cache
       $file = self::$cacheDir . DIRECTORY_SEPARATOR . md5($key) . '.cache';
       $data = [
         'value' => $value,
-        'expires' => time() + $ttl
+        'expires' => time() + $ttl,
       ];
       return @file_put_contents($file, serialize($data)) !== false;
     }

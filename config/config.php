@@ -21,10 +21,28 @@ define('MAX_PAGE_NUMBER', 1000);
 define('MIN_PAGE_NUMBER', 1);
 define('RESULTS_PER_PAGE', 20);
 
+// Cache configuration
+define('CACHE_DIR', dirname(__DIR__) . '/cache');
+
 // Allowed filter values (whitelist approach)
 define('ALLOWED_AI_TYPES', ['show_all', 'only_ai', 'exclude_ai']);
 define('ALLOWED_FILE_TYPES', ['all', '1', '2']);
 define('ALLOWED_ORIENTATIONS', ['all', 'landscape', 'portrait', 'square']);
 define('ALLOWED_LICENSES', ['all', 'free', 'premium']);
-define('ALLOWED_COLORS', ['all', 'red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'gray', 'black', 'white', 'teal', 'lime', 'brown']);
+define('ALLOWED_COLORS', [
+  'all',
+  'red',
+  'orange',
+  'yellow',
+  'green',
+  'blue',
+  'purple',
+  'pink',
+  'gray',
+  'black',
+  'white',
+  'teal',
+  'lime',
+  'brown',
+]);
 define('ALLOWED_PEOPLE_VALUES', ['all', 'No,0', '1', '2', '3', '4+']);
